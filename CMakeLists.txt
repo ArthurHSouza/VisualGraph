@@ -14,11 +14,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	add_compile_options("/O2")
-endif()
+#if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+#	add_compile_options("/O2/Wall")
+#endif()
+
 set(EXECUTABLE_NAME ${PROJECT_NAME})
-set(LIBRARY_NAME "graph")
+set(LIBRARY_TOOLS "tools")
+set(LIBRARY_GRAPH "graph")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -29,6 +31,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
+file(COPY ${PROJECT_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR}/bin)
+add_subdirectory(tools)
 add_subdirectory(graph)
 add_subdirectory(app)
 

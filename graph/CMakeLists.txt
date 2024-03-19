@@ -1,13 +1,20 @@
-set(LIBRARY_SOURCES "test.cpp")
-set(LIBRARY_HEADERS "test.hpp")
+set(LIBRARY_SOURCES "NodeCircle.cpp")
+set(LIBRARY_HEADERS "NodeCircle.hpp")
 
 add_library(
-	${LIBRARY_NAME} STATIC
+	${LIBRARY_GRAPH} STATIC
 	${LIBRARY_SOURCES}
 	${LIBRARY_HEADERS}
 )
 
-target_link_libraries(
-	${LIBRARY_NAME} PUBLIC
-	sfml-graphics
+target_include_directories(
+	${LIBRARY_GRAPH} PUBLIC
+	"./"
 )
+
+target_link_libraries(
+	${LIBRARY_GRAPH} PUBLIC
+	sfml-graphics
+	${LIBRARY_TOOLS}
+)
+
