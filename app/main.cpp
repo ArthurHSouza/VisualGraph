@@ -1,14 +1,23 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <vector>
+#include <array>
 #include "NodeCircle.hpp"
+#include <iostream>
 
-void addNodeOnScreen(sf::RenderWindow& window, std::vector<NodeCircle>& nodes)
+void addNodeOnPosition(sf::Vector2i&& position, std::vector<NodeCircle>& nodes)
 {
-    nodes.emplace_back(sf::Mouse::getPosition(window));
+    sf::Rect<float> tempRect(sf::Vector2f(position), sf::Vector2f(2, 2));
+    for (auto& i : nodes)
+    {
+        if(i.Intersects(tempRect))
+            return;
+    }
+    nodes.emplace_back(position);
 }
 
 int main()
 {
+    std::array<int, 2> selectedIndex{ -1, -1 };
     auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
     window.setFramerateLimit(144);
 
@@ -27,9 +36,37 @@ int main()
             }
             if (event.type == sf::Event::MouseButtonPressed)
             {
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
                 {
-                    addNodeOnScreen(window, nodesCircle);
+                    addNodeOnPosition(sf::Mouse::getPosition(window), nodesCircle);
+                }
+                else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    for (auto& n : nodesCircle)
+                    {
+                        int temp = n.SelectNode(sf::Mouse::getPosition(window));
+                        if (temp != -1)
+                        {
+                            if (selectedIndex[0] == -1)
+                            {
+                                selectedIndex[0] = temp;
+                            }
+                            else
+                            {
+                                selectedIndex[1] = temp;
+                            }
+                            break;
+                        }
+                    }
+                    if (selectedIndex[0] != -1 && selectedIndex[1] != -1)
+                    {
+                        for (int i{}; i < 2; i++)
+                        {
+                            nodesCircle[selectedIndex[i]].SetAsNotSelected();
+                            selectedIndex[i] = -1;
+                        }
+                    }
+                    std::cout << "valor do primeiro i " << selectedIndex[0] << " segundo " << selectedIndex[1] << "\n";
                 }
             }
         }
