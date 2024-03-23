@@ -22,7 +22,6 @@ NodeCircle::NodeCircle(sf::Vector2i position):
 	indexText.setColor(sf::Color::Black);
 	indexText.setPosition(sf::Vector2f(position));
 
-	std::cout << "positcao node " << position.x << " " << position.y << std::endl;
 }
 
 void NodeCircle::DrawShape(sf::RenderWindow& window) const
