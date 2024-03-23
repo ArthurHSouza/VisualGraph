@@ -61,6 +61,13 @@ void NodeCircle::SetAsNotSelected()
 	circle.setFillColor(sf::Color::White);
 }
 
+void NodeCircle::setPosition(sf::Vector2i position)
+{
+	this->position = position;
+	circle.setPosition(sf::Vector2f(position));
+	indexText.setPosition(sf::Vector2f(position));
+}
+
 const size_t NodeCircle::GetIndex() const
 {
 	return index;

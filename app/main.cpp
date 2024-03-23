@@ -31,9 +31,12 @@ void addEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition, std::vecto
 
 int main()
 {
-    std::vector<NodeCircle> selectedNodes;
+    std::vector<size_t> selectedNodeIndex;
     std::vector<NodeCircle> nodesCircle; 
     std::vector<EdgeShape> edgesShape;
+    sf::Clock timeHolding;
+    bool holding = false;
+    bool editMode = false;
 
     auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
     window.setFramerateLimit(144);
@@ -47,31 +50,61 @@ int main()
                 window.close();
                 return 0;
             }
-            if (event.type == sf::Event::MouseButtonPressed)
+            else if (event.type == sf::Event::MouseButtonReleased)
             {
+                std::cout << "soltou\n";
+                holding = false;
+                if (editMode)
+                {
+                    std::cout << "setou o edit mode como falso\n";
+                    editMode = false;
+                    if (!selectedNodeIndex.empty())
+                    {
+                        nodesCircle.at(selectedNodeIndex.front()).SetAsNotSelected();
+                        selectedNodeIndex.clear();
+                    }
+                }
+            }
+            else if (event.type == sf::Event::MouseButtonPressed)
+            {
+                //sf::Event::MouseButtonPressed
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
                 {
                     addNodeOnPosition(sf::Mouse::getPosition(window), nodesCircle);
                 }
                 else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 {
+                    selectedNodeIndex.clear();
+                    std::cout << "entrou no evento de clique\n";
                     for (auto& n : nodesCircle)
                     {
-                        n.SelectNode(sf::Mouse::getPosition(window));
-                    }
-                   
-                    std::copy_if(nodesCircle.begin(), nodesCircle.end(), std::back_inserter(selectedNodes),
-                        [](NodeCircle& n)
+                        if (n.SelectNode(sf::Mouse::getPosition(window)))
                         {
-                            return n.getIsSelected();
+                            std::cout << "selecionou\n";
+                           // editMode = !editMode;
+                            timeHolding.restart();
+                            selectedNodeIndex.push_back(n.GetIndex());
                         }
-                        );
-                    if (selectedNodes.size() == 2)
-                    {
-                        addEdge(selectedNodes.at(0).getPosition(), selectedNodes.at(1).getPosition(), edgesShape);
-                        for (auto& v : nodesCircle) v.SetAsNotSelected();
                     }
-                    selectedNodes.clear();
+                    
+                    if (selectedNodeIndex.size() == 1)
+                    {
+                        holding = true;
+                    }
+
+                    if (!holding)
+                    {
+                        std::cout << "ta solto mesmo hein " << selectedNodeIndex.size() << "\n";
+                        if (selectedNodeIndex.size() >= 2)
+                        {
+                            addEdge(
+                               nodesCircle.at(selectedNodeIndex.at(0)).getPosition(),
+                                nodesCircle.at(selectedNodeIndex.at(1)).getPosition(), 
+                                edgesShape);
+                            for (auto& v : nodesCircle) v.SetAsNotSelected();
+                        }
+                        //selectedNodeIndex.clear();
+                    }
                 }
             }
             else if (event.type == sf::Event::KeyPressed)
@@ -83,9 +116,19 @@ int main()
                     edgesShape.clear();
 
                 }
+                /*else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+                {
+                    editMode = !editMode;
+                }*/
             }
         }
- 
+        if (holding && selectedNodeIndex.size() == 1 && timeHolding.getElapsedTime().asSeconds() > 1.f)
+        {
+            editMode = true;
+            std::cout << "puxando\n";
+            nodesCircle.at(selectedNodeIndex.front()).setPosition(sf::Mouse::getPosition(window));
+        }
+
         window.clear(sf::Color::Yellow);
         
         for (auto& e : edgesShape)

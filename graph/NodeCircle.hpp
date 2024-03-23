@@ -20,6 +20,8 @@ public:
 	bool Intersects(sf::FloatRect rect);
 	bool SelectNode(sf::Vector2i&& mousePos);
 	void SetAsNotSelected();
+	void setPosition(sf::Vector2i position);
+
 	const size_t GetIndex() const;
 	const sf::Vector2i getPosition() const;
 	const bool getIsSelected() const;
