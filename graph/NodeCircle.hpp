@@ -15,11 +15,12 @@ public:
 	NodeCircle(sf::Vector2i position);
 	~NodeCircle() = default;
 
-	void DrawShape(sf::RenderWindow& window) const;
+	void Draw(sf::RenderWindow& window) const;
 	
 	bool Intersects(sf::FloatRect rect);
-	int SelectNode(sf::Vector2i&& mousePos);
+	bool SelectNode(sf::Vector2i&& mousePos);
 	void SetAsNotSelected();
 	const size_t GetIndex() const;
 	const sf::Vector2i getPosition() const;
+	const bool getIsSelected() const;
 };

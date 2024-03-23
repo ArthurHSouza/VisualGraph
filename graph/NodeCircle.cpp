@@ -12,7 +12,7 @@ NodeCircle::NodeCircle(sf::Vector2i position):
 	circle.setRadius(50);
 	circle.setFillColor(sf::Color::White);
 	circle.setOutlineThickness(5);
-	circle.setOutlineColor(sf::Color::Blue);
+	circle.setOutlineColor(sf::Color::Black);
 	circle.setOrigin(circle.getGlobalBounds().getSize() / 2.f);
 	circle.setPosition(sf::Vector2f(position));
 
@@ -24,13 +24,13 @@ NodeCircle::NodeCircle(sf::Vector2i position):
 
 }
 
-void NodeCircle::DrawShape(sf::RenderWindow& window) const
+void NodeCircle::Draw(sf::RenderWindow& window) const
 {
 	window.draw(circle);
 	window.draw(indexText);
 }
 
-int NodeCircle::SelectNode(sf::Vector2i&& mousePos)
+bool NodeCircle::SelectNode(sf::Vector2i&& mousePos)
 {
 	sf::Rect<float> mouseRec(sf::Vector2f(mousePos), sf::Vector2f(1,1));
 	if (circle.getGlobalBounds().intersects(mouseRec))
@@ -39,11 +39,13 @@ int NodeCircle::SelectNode(sf::Vector2i&& mousePos)
 		if (isSelected)
 		{
 			circle.setFillColor(sf::Color::Red);
-			return index;
 		}
-		circle.setFillColor(sf::Color::White);
+		else
+		{
+			circle.setFillColor(sf::Color::White);
+		}
 	}
-	return -1;
+	return isSelected;
 }
 
 
@@ -67,5 +69,10 @@ const size_t NodeCircle::GetIndex() const
 const sf::Vector2i NodeCircle::getPosition() const
 {
 	return position;
+}
+
+const bool NodeCircle::getIsSelected() const
+{
+	return isSelected;
 }
 

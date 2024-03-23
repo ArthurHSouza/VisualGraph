@@ -1,6 +1,7 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <vector>
 #include <array>
+#include <ranges>
 #include "NodeCircle.hpp"
 #include "EdgeShape.hpp"
 #include <iostream>
@@ -16,9 +17,21 @@ void addNodeOnPosition(sf::Vector2i&& position, std::vector<NodeCircle>& nodes)
     nodes.emplace_back(position);
 }
 
+void addEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition, std::vector<EdgeShape>& edges)
+{
+    for (auto& e : edges)
+    {
+        if (e.getBeginingPosition() == beginingPosition && e.getEndPosition() == endPosition)
+        {
+            return;
+        }
+    }
+    edges.emplace_back(beginingPosition, endPosition);
+}
+
 int main()
 {
-    std::array<int, 2> selectedIndex{ -1, -1 };
+    std::vector<NodeCircle> selectedNodes;
     std::vector<NodeCircle> nodesCircle; 
     std::vector<EdgeShape> edgesShape;
 
@@ -44,36 +57,35 @@ int main()
                 {
                     for (auto& n : nodesCircle)
                     {
-                        int temp = n.SelectNode(sf::Mouse::getPosition(window));
-                        if (temp != -1)
-                        {
-                            if (selectedIndex[0] == -1)
-                            {
-                                selectedIndex[0] = temp;
-                            }
-                            else
-                            {
-                                selectedIndex[1] = temp;
-                            }
-                            break;
-                        }
+                        n.SelectNode(sf::Mouse::getPosition(window));
                     }
-                    if (selectedIndex[0] != -1 && selectedIndex[1] != -1)
-                    {
-                        edgesShape.emplace_back(
-                            nodesCircle[selectedIndex[0]].getPosition(),
-                            nodesCircle[selectedIndex[1]].getPosition()
+                   
+                    std::copy_if(nodesCircle.begin(), nodesCircle.end(), std::back_inserter(selectedNodes),
+                        [](NodeCircle& n)
+                        {
+                            return n.getIsSelected();
+                        }
                         );
-                        for (int i{}; i < 2; i++)
-                        {
-                            nodesCircle[selectedIndex[i]].SetAsNotSelected();
-                            selectedIndex[i] = -1;
-                        }
+                    if (selectedNodes.size() == 2)
+                    {
+                        addEdge(selectedNodes.at(0).getPosition(), selectedNodes.at(1).getPosition(), edgesShape);
+                        for (auto& v : nodesCircle) v.SetAsNotSelected();
                     }
+                    selectedNodes.clear();
+                }
+            }
+            else if (event.type == sf::Event::KeyPressed)
+            {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+                {
+                    NodeCircle::count = 0;
+                    nodesCircle.clear();
+                    edgesShape.clear();
+
                 }
             }
         }
-
+ 
         window.clear(sf::Color::Yellow);
         
         for (auto& e : edgesShape)
@@ -82,7 +94,7 @@ int main()
         }
         for (auto& node : nodesCircle)
         {
-            node.DrawShape(window);
+            node.Draw(window);
         }
 
         window.display();

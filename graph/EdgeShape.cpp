@@ -1,7 +1,9 @@
 #include "EdgeShape.hpp"
 #include <numbers>
+#include <cmath>
 
-EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end)
+EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
+	position{begining}, endPosition{end}
 {
 	float difX = std::abs(end.x - begining.x);
 	float dist = std::sqrt(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
@@ -12,7 +14,7 @@ EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end)
 		arrowRect.getGlobalBounds().getSize().y
 	);
 	arrowRect.setPosition(sf::Vector2f(begining));
-	arrowRect.setFillColor(sf::Color::White);
+	arrowRect.setFillColor(sf::Color::Black);
 
 	float rotationDegrees = std::asinf(difX / dist) * 180.f/std::numbers::pi_v<float>;
 	if (end.y < begining.y && end.x < begining.x)
@@ -34,4 +36,14 @@ EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end)
 void EdgeShape::Draw(sf::RenderTarget& window)
 {
 	window.draw(arrowRect);
+}
+
+const sf::Vector2i EdgeShape::getBeginingPosition() const
+{
+	return position;
+}
+
+const sf::Vector2i EdgeShape::getEndPosition() const
+{
+	return endPosition;
 }
