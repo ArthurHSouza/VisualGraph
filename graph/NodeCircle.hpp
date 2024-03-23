@@ -21,4 +21,5 @@ public:
 	int SelectNode(sf::Vector2i&& mousePos);
 	void SetAsNotSelected();
 	const size_t GetIndex() const;
+	const sf::Vector2i getPosition() const;
 };

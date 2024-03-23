@@ -21,6 +21,8 @@ NodeCircle::NodeCircle(sf::Vector2i position):
 	indexText.setFont(AssetManager<sf::Font>::Get("assets/Square.ttf"));
 	indexText.setColor(sf::Color::Black);
 	indexText.setPosition(sf::Vector2f(position));
+
+	std::cout << "positcao node " << position.x << " " << position.y << std::endl;
 }
 
 void NodeCircle::DrawShape(sf::RenderWindow& window) const
@@ -61,5 +63,10 @@ void NodeCircle::SetAsNotSelected()
 const size_t NodeCircle::GetIndex() const
 {
 	return index;
+}
+
+const sf::Vector2i NodeCircle::getPosition() const
+{
+	return position;
 }
 
