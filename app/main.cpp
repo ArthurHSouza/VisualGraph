@@ -117,7 +117,7 @@ int main()
                 }
             }
         }
-        if (holding && selectedNodeIndex.size() == 1 && timeHolding.getElapsedTime().asSeconds() > 0.6f)
+        if (holding && selectedNodeIndex.size() == 1 && timeHolding.getElapsedTime().asSeconds() > 0.3f)
         {
             editMode = true;
             nodesCircle.at(selectedNodeIndex.front()).setPosition(sf::Mouse::getPosition(window));

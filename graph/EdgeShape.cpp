@@ -53,27 +53,19 @@ void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChange
 	arrowRect.setScale(1, dist / arrowRect.getSize().y);
 
 	float rotationDegrees = std::asinf(difX / dist) * 180.f / std::numbers::pi_v<float>;
-	std::cout << "antes " << rotationDegrees << "\n";
-	if (end.y < begining.y && end.x < begining.x)
+	if ((end.y == begining.y || end.y < begining.y) && end.x < begining.x)
 	{
-		std::cout << "a\n";
 		rotationDegrees *= -1;
 	}
-	else if (end.y > begining.y && end.x < begining.x)
+	else if (end.y > begining.y && (end.x == begining.x || end.x < begining.x))
 	{
-		std::cout << "b\n";
 		rotationDegrees -= 180;
 	}
 	else if (end.y > begining.y && end.x > begining.x)
 	{
-		std::cout << "c\n";
 		rotationDegrees = 180 - rotationDegrees;
 	}
-	else 
-	{
-		std::cout << "d\n";
-	}
-	std::cout << "dps " << rotationDegrees << "\n";
+	
 	arrowRect.setRotation(rotationDegrees);
 }
 
