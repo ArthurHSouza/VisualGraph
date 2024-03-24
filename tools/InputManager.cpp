@@ -16,7 +16,7 @@ void InputManager::AddNodeOnPosition(sf::Vector2i&& position)
     nodes.emplace_back(position);
 }
 
-void InputManager::AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition, std::list<EdgeShape>& edges)
+void InputManager::AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition)
 {
     for (auto& e : edges)
     {
@@ -73,8 +73,7 @@ void InputManager::MouseButtonInput()
         {
             AddEdge(
                 nodes.at(selectedNodeIndex.front()).getPosition(),
-                nodes.at(selectedNodeIndex.back()).getPosition(),
-                edges
+                nodes.at(selectedNodeIndex.back()).getPosition()
             );
             for (auto& v : nodes) v.SetAsNotSelected();
         }
@@ -109,7 +108,7 @@ void InputManager::KeyboardInput()
 
 void InputManager::Update()
 {
-    if (holding && timeHolding.getElapsedTime().asSeconds() > 0.2f)
+    if (holding && timeHolding.getElapsedTime().asSeconds() > timeToEdit)
     {
         editMode = true;
         nodes.at(selectedNodeIndex.front()).setPosition(sf::Mouse::getPosition(window));

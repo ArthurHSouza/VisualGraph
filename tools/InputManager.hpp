@@ -15,9 +15,10 @@ private:
     sf::Clock timeHolding;
     bool holding{ false };
     bool editMode{ false };
+    const float timeToEdit{ 0.2f };
 
     void AddNodeOnPosition(sf::Vector2i&& position);
-    void AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition, std::list<EdgeShape>& edges);
+    void AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition);
 
 public:
 	InputManager(sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<EdgeShape>& edges) ;
