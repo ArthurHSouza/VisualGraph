@@ -17,8 +17,8 @@ NodeCircle::NodeCircle(sf::Vector2i position):
 	circle.setPosition(sf::Vector2f(position));
 
 	indexText.setString(std::to_string(index));
-	indexText.setOrigin(indexText.getGlobalBounds().getSize() / 2.f);
 	indexText.setFont(AssetManager<sf::Font>::Get("assets/Square.ttf"));
+	indexText.setOrigin(indexText.getGlobalBounds().getSize()/2.f + indexText.getGlobalBounds().getPosition());
 	indexText.setColor(sf::Color::Black);
 	indexText.setPosition(sf::Vector2f(position));
 
