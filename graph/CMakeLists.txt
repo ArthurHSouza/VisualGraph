@@ -18,3 +18,5 @@ target_link_libraries(
 	${LIBRARY_TOOLS}
 )
 
+TARGET_SET_WARNINGS(${LIBRARY_GRAPH} on)
+

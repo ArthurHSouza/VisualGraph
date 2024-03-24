@@ -5,8 +5,8 @@
 EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
 	position{begining}, endPosition{end}
 {
-	float difX = std::abs(end.x - begining.x);
-	float dist = std::sqrt(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
+	int difX = std::abs(end.x - begining.x);
+	float dist = std::sqrtf(std::pow<int>(difX, 2) + std::pow<int>(end.y - begining.y, 2));
 
 
 	arrowRect.setSize(sf::Vector2f(10.f,dist));
@@ -34,7 +34,7 @@ EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
 	arrowRect.setRotation(rotationDegrees);
 }
 
-void EdgeShape::Draw(sf::RenderTarget& window)
+void EdgeShape::Draw(sf::RenderTarget& window) const
 {
 	window.draw(arrowRect);
 }
@@ -47,8 +47,8 @@ void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChange
 	{
 		arrowRect.setPosition(sf::Vector2f(begining));
 	}
-	float difX = std::abs(end.x - begining.x);
-	float dist = std::sqrt(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
+	int difX = std::abs(end.x - begining.x);
+	float dist = std::sqrtf(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
 	
 	arrowRect.setScale(1, dist / arrowRect.getSize().y);
 

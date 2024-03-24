@@ -22,6 +22,9 @@ set(EXECUTABLE_NAME ${PROJECT_NAME})
 set(LIBRARY_TOOLS "tools")
 set(LIBRARY_GRAPH "graph")
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
+include(Warnings)
+
 include(FetchContent)
 FetchContent_Declare(
 	SFML

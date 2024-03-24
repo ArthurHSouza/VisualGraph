@@ -13,7 +13,7 @@ public:
 	EdgeShape(sf::Vector2i begining, sf::Vector2i end);
 	~EdgeShape() = default;
 
-	void Draw(sf::RenderTarget& window);
+	void Draw(sf::RenderTarget& window) const;
 	void Update(sf::Vector2i begining, sf::Vector2i end, bool shallChangePosition = false);
 	const sf::Vector2i getBeginingPosition() const;
 	const sf::Vector2i getEndPosition() const;
