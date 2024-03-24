@@ -9,7 +9,7 @@ class InputManager
 {
 private:
     std::vector<size_t> selectedNodeIndex;
-    const sf::RenderWindow& window;
+    sf::RenderWindow& window;
     std::vector<NodeCircle>& nodes;
     std::list<EdgeShape>& edges;
     sf::Clock timeHolding;
@@ -20,7 +20,7 @@ private:
     void AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition, std::list<EdgeShape>& edges);
 
 public:
-	InputManager(const sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<EdgeShape>& edges) ;
+	InputManager(sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<EdgeShape>& edges) ;
 	~InputManager() = default;
 
     void MouseButtonRelease();

@@ -1,6 +1,6 @@
 #include "InputManager.hpp"
 
-InputManager::InputManager(const sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<EdgeShape>& edges) :
+InputManager::InputManager(sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<EdgeShape>& edges) :
     window{window}, nodes{nodes}, edges{edges}
 {
 }
@@ -83,7 +83,11 @@ void InputManager::MouseButtonInput()
 
 void InputManager::KeyboardInput()
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    {
+        window.close();
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
     {
         NodeCircle::count = 0;
         nodes.clear();
