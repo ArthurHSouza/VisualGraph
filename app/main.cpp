@@ -13,7 +13,7 @@ int main()
     std::vector<NodeCircle> nodesCircle; 
     std::list<EdgeShape> edgesShape;
 
-    auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
+    auto window = sf::RenderWindow{ { 1920u, 1080u}, "CMake SFML Project",  sf::Style::Titlebar | sf::Style::Close };
     window.setFramerateLimit(144);
 
     InputManager inputManager(window, nodesCircle, edgesShape);
