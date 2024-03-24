@@ -2,7 +2,7 @@
 #include <vector>
 #include <list>
 #include <array>
-#include <ranges>
+#include <string>
 #include "NodeCircle.hpp"
 #include "EdgeShape.hpp"
 #include <iostream>
@@ -114,6 +114,17 @@ int main()
                     nodesCircle.clear();
                     edgesShape.clear();
 
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+                {
+                    sf::Texture texture;
+                    const std::string fileName{ "ScreenshotGraph.png" };
+                    texture.create(window.getSize().x, window.getSize().y);
+                    texture.update(window);
+                    if (texture.copyToImage().saveToFile(fileName))
+                    {
+                        std::cout << "screenshot saved to " << fileName << std::endl;
+                    }
                 }
             }
         }
