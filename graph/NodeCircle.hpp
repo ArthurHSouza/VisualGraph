@@ -1,5 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <utility>
+#include "EdgeShape.hpp"
 
 class NodeCircle
 {
@@ -9,6 +12,7 @@ private:
 	sf::Text indexText;
 	const size_t index;
 	bool isSelected{ false };
+	std::vector<std::pair<EdgeShape&, bool>> edges;
 
 public:
 	static size_t count;
@@ -21,6 +25,7 @@ public:
 	bool SelectNode(sf::Vector2i&& mousePos);
 	void SetAsNotSelected();
 	void setPosition(sf::Vector2i position);
+	void insertEdge(EdgeShape& edge, bool isPrimary);
 
 	const size_t GetIndex() const;
 	const sf::Vector2i getPosition() const;

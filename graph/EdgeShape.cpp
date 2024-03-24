@@ -8,6 +8,7 @@ EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
 	float difX = std::abs(end.x - begining.x);
 	float dist = std::sqrt(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
 
+
 	arrowRect.setSize(sf::Vector2f(10.f,dist));
 	arrowRect.setOrigin(
 		arrowRect.getGlobalBounds().getSize().x/2.f, 
@@ -36,6 +37,44 @@ EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
 void EdgeShape::Draw(sf::RenderTarget& window)
 {
 	window.draw(arrowRect);
+}
+
+void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChangePosition)
+{
+	position = begining;
+	endPosition = end;
+	if (shallChangePosition)
+	{
+		arrowRect.setPosition(sf::Vector2f(begining));
+	}
+	float difX = std::abs(end.x - begining.x);
+	float dist = std::sqrt(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
+	
+	arrowRect.setScale(1, dist / arrowRect.getSize().y);
+
+	float rotationDegrees = std::asinf(difX / dist) * 180.f / std::numbers::pi_v<float>;
+	std::cout << "antes " << rotationDegrees << "\n";
+	if (end.y < begining.y && end.x < begining.x)
+	{
+		std::cout << "a\n";
+		rotationDegrees *= -1;
+	}
+	else if (end.y > begining.y && end.x < begining.x)
+	{
+		std::cout << "b\n";
+		rotationDegrees -= 180;
+	}
+	else if (end.y > begining.y && end.x > begining.x)
+	{
+		std::cout << "c\n";
+		rotationDegrees = 180 - rotationDegrees;
+	}
+	else 
+	{
+		std::cout << "d\n";
+	}
+	std::cout << "dps " << rotationDegrees << "\n";
+	arrowRect.setRotation(rotationDegrees);
 }
 
 const sf::Vector2i EdgeShape::getBeginingPosition() const

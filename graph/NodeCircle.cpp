@@ -61,11 +61,28 @@ void NodeCircle::SetAsNotSelected()
 	circle.setFillColor(sf::Color::White);
 }
 
-void NodeCircle::setPosition(sf::Vector2i position)
+void NodeCircle::setPosition(sf::Vector2i mousePosition)
 {
-	this->position = position;
+	this->position = mousePosition;
 	circle.setPosition(sf::Vector2f(position));
 	indexText.setPosition(sf::Vector2f(position));
+
+	for (auto& e : edges)
+	{
+		if (e.second)
+		{
+			e.first.Update(position, e.first.getEndPosition(), true);
+		}
+		else
+		{
+			e.first.Update(e.first.getBeginingPosition(), position);
+		}
+	}
+}
+
+void NodeCircle::insertEdge(EdgeShape& edge, bool isPrimary)
+{
+	edges.push_back({ edge, isPrimary });
 }
 
 const size_t NodeCircle::GetIndex() const
