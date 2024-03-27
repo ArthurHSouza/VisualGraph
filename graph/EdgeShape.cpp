@@ -3,19 +3,19 @@
 #include <cmath>
 
 EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
-	position{begining}, endPosition{end}
+	VisualObject(begining, 10.f, sf::Color::Black, sf::Color::Blue, sf::Color::Red), endPosition{end}
 {
 	int difX = std::abs(end.x - begining.x);
 	float dist = std::sqrtf(std::pow<int>(difX, 2) + std::pow<int>(end.y - begining.y, 2));
 
 
-	arrowRect.setSize(sf::Vector2f(10.f,dist));
+	arrowRect.setSize(sf::Vector2f(size,dist));
 	arrowRect.setOrigin(
 		arrowRect.getGlobalBounds().getSize().x/2.f, 
 		arrowRect.getGlobalBounds().getSize().y
 	);
 	arrowRect.setPosition(sf::Vector2f(begining));
-	arrowRect.setFillColor(sf::Color::Black);
+	arrowRect.setFillColor(defaultColor);
 
 	float rotationDegrees = std::asinf(difX / dist) * 180.f/std::numbers::pi_v<float>;
 	if (end.y < begining.y && end.x < begining.x)
@@ -69,12 +69,30 @@ void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChange
 	arrowRect.setRotation(rotationDegrees);
 }
 
-const sf::Vector2i EdgeShape::getBeginingPosition() const
+void EdgeShape::FillWithDefinedColor(DefinedColor color)
+{
+	switch (color)
+	{
+	case VisualObject::DefinedColor::DefaultColor:
+		arrowRect.setFillColor(defaultColor);
+		break;
+	case VisualObject::DefinedColor::SelectedColor:
+		arrowRect.setFillColor(selectedColor);
+		break;
+	case VisualObject::DefinedColor::DeleteColor:
+		arrowRect.setFillColor(deleteColor);
+		break;
+	default:
+		break;
+	}
+}
+
+const sf::Vector2i EdgeShape::GetPosition() const
 {
 	return position;
 }
 
-const sf::Vector2i EdgeShape::getEndPosition() const
+const sf::Vector2i EdgeShape::GetEndPosition() const
 {
 	return endPosition;
 }

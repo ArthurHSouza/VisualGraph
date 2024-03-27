@@ -5,14 +5,13 @@
 
 size_t NodeCircle::count = 0;
 
-NodeCircle::NodeCircle(sf::Vector2i position):
-	position{position}, index{count++}
+NodeCircle::NodeCircle(sf::Vector2i position) :
+	VisualObject(position,50.f, sf::Color::White, sf::Color::Blue, sf::Color::Red), index{count++}, outlineColor{ sf::Color::Black }
 {
-
-	circle.setRadius(50);
-	circle.setFillColor(sf::Color::White);
-	circle.setOutlineThickness(5);
-	circle.setOutlineColor(sf::Color::Black);
+	circle.setRadius(size);
+	circle.setFillColor(defaultColor);
+	circle.setOutlineThickness(size*0.1f);
+	circle.setOutlineColor(outlineColor);
 	circle.setOrigin(circle.getGlobalBounds().getSize() / 2.f);
 	circle.setPosition(sf::Vector2f(position));
 
@@ -24,10 +23,28 @@ NodeCircle::NodeCircle(sf::Vector2i position):
 
 }
 
-void NodeCircle::Draw(sf::RenderWindow& window) const
+void NodeCircle::Draw(sf::RenderTarget& window) const
 {
 	window.draw(circle);
 	window.draw(indexText);
+}
+
+void NodeCircle::FillWithDefinedColor(DefinedColor color)
+{
+	switch (color)
+	{
+	case VisualObject::DefinedColor::DefaultColor:
+		circle.setFillColor(defaultColor);
+		break;
+	case VisualObject::DefinedColor::SelectedColor:
+		circle.setFillColor(selectedColor);
+		break;
+	case VisualObject::DefinedColor::DeleteColor:
+		circle.setFillColor(deleteColor);
+		break;
+	default:
+		break;
+	}
 }
 
 bool NodeCircle::SelectNode(sf::Vector2i&& mousePos)
@@ -38,11 +55,11 @@ bool NodeCircle::SelectNode(sf::Vector2i&& mousePos)
 		isSelected = !isSelected;
 		if (isSelected)
 		{
-			circle.setFillColor(sf::Color::Red);
+			circle.setFillColor(selectedColor);
 		}
 		else
 		{
-			circle.setFillColor(sf::Color::White);
+			circle.setFillColor(defaultColor);
 		}
 	}
 	return isSelected;
@@ -76,11 +93,11 @@ void NodeCircle::setPosition(sf::Vector2i mousePosition)
 		auto temp = e.first.lock();
 		if (e.second)
 		{
-			temp->Update(position, temp->getEndPosition(), true);
+			temp->Update(position, temp->GetEndPosition(), true);
 		}
 		else
 		{
-			temp->Update(temp->getBeginingPosition(), position);
+			temp->Update(temp->GetPosition(), position);
 		}
 	}
 }
@@ -95,12 +112,12 @@ const size_t NodeCircle::GetIndex() const
 	return index;
 }
 
-const sf::Vector2i NodeCircle::getPosition() const
+const sf::Vector2i NodeCircle::GetPosition() const
 {
 	return position;
 }
 
-const bool NodeCircle::getIsSelected() const
+const bool NodeCircle::GetIsSelected() const
 {
 	return isSelected;
 }

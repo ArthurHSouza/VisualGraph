@@ -1,20 +1,20 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "VisualObject.hpp"
 #include <iostream>
 
-class EdgeShape 
+class EdgeShape : public VisualObject
 {
 private:
 	sf::RectangleShape arrowRect;
-	sf::Vector2i position;
 	sf::Vector2i endPosition;
-	sf::Vector2i size;
+
 public:
 	EdgeShape(sf::Vector2i begining, sf::Vector2i end);
 	~EdgeShape() = default;
 
-	void Draw(sf::RenderTarget& window) const;
+	void Draw(sf::RenderTarget& window) const override;
 	void Update(sf::Vector2i begining, sf::Vector2i end, bool shallChangePosition = false);
-	const sf::Vector2i getBeginingPosition() const;
-	const sf::Vector2i getEndPosition() const;
+	void FillWithDefinedColor(DefinedColor color) override;
+	const sf::Vector2i GetPosition() const override;
+	const sf::Vector2i GetEndPosition() const;
 };

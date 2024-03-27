@@ -1,15 +1,15 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "VisualObject.hpp"
 #include <vector>
 #include <utility>
 #include <memory>
 #include "EdgeShape.hpp"
 
-class NodeCircle
+class NodeCircle : public VisualObject
 {
 private:
-	sf::Vector2i position;
 	sf::CircleShape circle;
+	sf::Color outlineColor;
 	sf::Text indexText;
 	const size_t index;
 	bool isSelected{ false };
@@ -30,8 +30,8 @@ public:
 		return *this;
 	}
 
-	void Draw(sf::RenderWindow& window) const;
-	
+	void Draw(sf::RenderTarget& window) const override;
+	void FillWithDefinedColor(DefinedColor color) override;
 	bool Intersects(sf::FloatRect rect);
 	bool SelectNode(sf::Vector2i&& mousePos);
 	void SetAsNotSelected();
@@ -49,11 +49,7 @@ public:
 		}
 		return temp;
 	}
-	void ChangeColor(sf::Color c)
-	{
-		circle.setFillColor(c);
-	}
 	const size_t GetIndex() const;
-	const sf::Vector2i getPosition() const;
-	const bool getIsSelected() const;
+	const sf::Vector2i GetPosition() const override;
+	const bool GetIsSelected() const;
 };

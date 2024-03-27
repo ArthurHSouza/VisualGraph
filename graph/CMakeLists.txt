@@ -1,5 +1,5 @@
-set(LIBRARY_SOURCES "NodeCircle.cpp" "EdgeShape.cpp")
-set(LIBRARY_HEADERS "NodeCircle.hpp" "EdgeShape.hpp")
+set(LIBRARY_SOURCES "NodeCircle.cpp" "EdgeShape.cpp" "VisualObject.cpp")
+set(LIBRARY_HEADERS "NodeCircle.hpp" "EdgeShape.hpp" "VisualObject.hpp")
 
 add_library(
 	${LIBRARY_GRAPH} STATIC

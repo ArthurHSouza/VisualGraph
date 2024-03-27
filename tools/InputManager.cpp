@@ -22,7 +22,7 @@ void InputManager::DeleteNode(size_t index)
 
     for (auto& e : edegesAdress)
     {
-        auto a = std::erase_if<>(edges,
+        std::erase_if<>(edges,
             [&](auto element) {return &*element == &*e; });
     }
 
@@ -34,7 +34,7 @@ void InputManager::AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPositi
 {
     for (auto& e : edges)
     {
-        if (e->getBeginingPosition() == beginingPosition && e->getEndPosition() == endPosition)
+        if (e->GetPosition() == beginingPosition && e->GetEndPosition() == endPosition)
         {
             return;
         }
@@ -93,8 +93,8 @@ void InputManager::MouseButtonInput()
         if (selectedNodeIndex.size() == 2)
         {
             AddEdge(
-                nodes.at(selectedNodeIndex.front()).getPosition(),
-                nodes.at(selectedNodeIndex.back()).getPosition()
+                nodes.at(selectedNodeIndex.front()).GetPosition(),
+                nodes.at(selectedNodeIndex.back()).GetPosition()
             );
             for (auto& v : nodes) v.SetAsNotSelected();
         }
@@ -120,14 +120,14 @@ void InputManager::KeyboardInput()
         {
             for (auto& n : nodes)
             {
-                n.ChangeColor(sf::Color::Blue);
+                n.FillWithDefinedColor(VisualObject::DefinedColor::DeleteColor);
             }
         }
         else
         {
             for (auto& n : nodes)
             {
-                n.ChangeColor(sf::Color::White);
+                n.FillWithDefinedColor(VisualObject::DefinedColor::DefaultColor);
             }
         }
     }
