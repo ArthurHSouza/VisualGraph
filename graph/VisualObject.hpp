@@ -20,4 +20,5 @@ public:
 	virtual void Draw(sf::RenderTarget& window) const = 0;
 	virtual const sf::Vector2i GetPosition() const = 0;
 	virtual void FillWithDefinedColor(DefinedColor color) = 0;
+	virtual bool Select(sf::Vector2i&& mousePos) = 0;
 };

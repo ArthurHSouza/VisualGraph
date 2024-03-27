@@ -5,6 +5,10 @@
 EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
 	VisualObject(begining, 10.f, sf::Color::Black, sf::Color::Blue, sf::Color::Red), endPosition{end}
 {
+	collisionPoint.setSize(sf::Vector2f(20.f,20.f));
+	collisionPoint.setOrigin(collisionPoint.getGlobalBounds().getSize() / 2.f);
+	collisionPoint.setFillColor(deleteColor);
+
 	int difX = std::abs(end.x - begining.x);
 	float dist = std::sqrtf(std::pow<int>(difX, 2) + std::pow<int>(end.y - begining.y, 2));
 
@@ -32,11 +36,17 @@ EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
 	}
 	
 	arrowRect.setRotation(rotationDegrees);
+
+	float targetX = std::lerp(position.x, endPosition.x, 0.5f);
+	float targetY = std::lerp(position.y, endPosition.y, 0.5f);
+	collisionPoint.setPosition(targetX, targetY);
 }
 
 void EdgeShape::Draw(sf::RenderTarget& window) const
 {
 	window.draw(arrowRect);
+	if(drawCollisionPoint)
+		window.draw(collisionPoint);
 }
 
 void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChangePosition)
@@ -67,10 +77,15 @@ void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChange
 	}
 	
 	arrowRect.setRotation(rotationDegrees);
+
+	float targetX = std::lerp(position.x, endPosition.x, 0.5f);
+	float targetY = std::lerp(position.y, endPosition.y, 0.5f);
+	collisionPoint.setPosition(targetX, targetY);
 }
 
 void EdgeShape::FillWithDefinedColor(DefinedColor color)
 {
+	drawCollisionPoint = false;
 	switch (color)
 	{
 	case VisualObject::DefinedColor::DefaultColor:
@@ -80,6 +95,7 @@ void EdgeShape::FillWithDefinedColor(DefinedColor color)
 		arrowRect.setFillColor(selectedColor);
 		break;
 	case VisualObject::DefinedColor::DeleteColor:
+		drawCollisionPoint = true;
 		arrowRect.setFillColor(deleteColor);
 		break;
 	default:
@@ -95,4 +111,10 @@ const sf::Vector2i EdgeShape::GetPosition() const
 const sf::Vector2i EdgeShape::GetEndPosition() const
 {
 	return endPosition;
+}
+
+bool EdgeShape::Select(sf::Vector2i&& mousePos)
+{
+	sf::Rect<float> mouseRec(sf::Vector2f(mousePos), sf::Vector2f(1, 1));
+	return collisionPoint.getGlobalBounds().intersects(mouseRec);
 }

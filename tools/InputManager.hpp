@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <list>
+#include <algorithm>
 #include "NodeCircle.hpp"
 #include "EdgeShape.hpp"
 

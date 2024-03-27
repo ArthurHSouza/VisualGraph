@@ -70,10 +70,28 @@ void InputManager::MouseButtonInput()
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         selectedNodeIndex.clear();
+     
+        if (deleteMode)
+        {
+            /*for (auto& e : edges)
+            {
+                if (e->Select(sf::Mouse::getPosition(window)))
+                {
+                    std::erase_if<>(edges,
+                        [&](auto element) {return &*element == &*e; });
+                    return;
+                }
+            }*/
+            std::erase_if<>(edges, 
+                [&](std::shared_ptr<EdgeShape>& e) {
+                  return  e->Select(sf::Mouse::getPosition(window));
+                });
+        }
+        
         size_t i = 0;
         for (; i < nodes.size(); i++)
         {
-            if (nodes.at(i).SelectNode(sf::Mouse::getPosition(window)))
+            if (nodes.at(i).Select(sf::Mouse::getPosition(window)))
             {
                 if (deleteMode)
                 {
@@ -118,17 +136,13 @@ void InputManager::KeyboardInput()
         deleteMode = !deleteMode;
         if (deleteMode)
         {
-            for (auto& n : nodes)
-            {
-                n.FillWithDefinedColor(VisualObject::DefinedColor::DeleteColor);
-            }
+            for (auto& n : nodes) n.FillWithDefinedColor(VisualObject::DefinedColor::DeleteColor);
+            for (auto& e : edges) e->FillWithDefinedColor(VisualObject::DefinedColor::DeleteColor);
         }
         else
         {
-            for (auto& n : nodes)
-            {
-                n.FillWithDefinedColor(VisualObject::DefinedColor::DefaultColor);
-            }
+            for (auto& n : nodes) n.FillWithDefinedColor(VisualObject::DefinedColor::DefaultColor);
+            for (auto& e : edges) e->FillWithDefinedColor(VisualObject::DefinedColor::DefaultColor);
         }
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
@@ -146,7 +160,7 @@ void InputManager::KeyboardInput()
 
 void InputManager::Update()
 {
-    if (holding && timeHolding.getElapsedTime().asSeconds() > timeToEdit)
+    if (holding && !deleteMode && timeHolding.getElapsedTime().asSeconds() > timeToEdit)
     {
         editMode = true;
         nodes.at(selectedNodeIndex.front()).setPosition(sf::Mouse::getPosition(window));
