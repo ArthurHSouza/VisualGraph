@@ -64,6 +64,7 @@ void InputManager::MouseButtonInput()
 {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
+        if (deleteMode) return;
         AddNodeOnPosition(sf::Mouse::getPosition(window));
     }
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
