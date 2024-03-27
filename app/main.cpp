@@ -3,6 +3,7 @@
 #include <list>
 #include <array>
 #include <string>
+#include <memory>
 #include "NodeCircle.hpp"
 #include "EdgeShape.hpp"
 #include "InputManager.hpp"
@@ -11,7 +12,7 @@
 int main()
 {
     std::vector<NodeCircle> nodesCircle; 
-    std::list<EdgeShape> edgesShape;
+    std::list<std::shared_ptr<EdgeShape>> edgesShape;
 
     auto window = sf::RenderWindow{ { 1920u, 1080u}, "CMake SFML Project",  sf::Style::Titlebar | sf::Style::Close };
     window.setFramerateLimit(144);
@@ -47,7 +48,7 @@ int main()
         
         for (auto& e : edgesShape)
         {
-            e.Draw(window);
+            e->Draw(window);
         }
         for (auto& node : nodesCircle)
         {

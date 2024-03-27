@@ -1,6 +1,6 @@
 #include "InputManager.hpp"
 
-InputManager::InputManager(sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<EdgeShape>& edges) :
+InputManager::InputManager(sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<std::shared_ptr<EdgeShape>>& edges) :
     window{window}, nodes{nodes}, edges{edges}
 {
 }
@@ -16,16 +16,31 @@ void InputManager::AddNodeOnPosition(sf::Vector2i&& position)
     nodes.emplace_back(position);
 }
 
+void InputManager::DeleteNode(size_t index)
+{
+    auto edegesAdress = nodes.at(index).GetLinkedEdges();
+
+    for (auto& e : edegesAdress)
+    {
+        auto a = std::erase_if<>(edges,
+            [&](auto element) {return &*element == &*e; });
+    }
+
+    nodes.erase(nodes.begin() + index);
+    return;
+}
+
 void InputManager::AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition)
 {
     for (auto& e : edges)
     {
-        if (e.getBeginingPosition() == beginingPosition && e.getEndPosition() == endPosition)
+        if (e->getBeginingPosition() == beginingPosition && e->getEndPosition() == endPosition)
         {
             return;
         }
     }
-    edges.emplace_back(beginingPosition, endPosition);
+
+    edges.emplace_back(std::make_shared<EdgeShape>(beginingPosition, endPosition));
 
     nodes.at(selectedNodeIndex.front()).insertEdge(edges.back(), true);
     nodes.at(selectedNodeIndex.back()).insertEdge(edges.back(), false);
@@ -54,12 +69,17 @@ void InputManager::MouseButtonInput()
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         selectedNodeIndex.clear();
-        for (auto& n : nodes)
+        size_t i = 0;
+        for (; i < nodes.size(); i++)
         {
-            if (n.SelectNode(sf::Mouse::getPosition(window)))
+            if (nodes.at(i).SelectNode(sf::Mouse::getPosition(window)))
             {
+                if (deleteMode)
+                {
+                    DeleteNode(i);
+                }
                 timeHolding.restart();
-                selectedNodeIndex.push_back(n.GetIndex());
+                selectedNodeIndex.push_back(i);
             }
         }
 
@@ -91,7 +111,24 @@ void InputManager::KeyboardInput()
         NodeCircle::count = 0;
         nodes.clear();
         edges.clear();
-
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+    {
+        deleteMode = !deleteMode;
+        if (deleteMode)
+        {
+            for (auto& n : nodes)
+            {
+                n.ChangeColor(sf::Color::Blue);
+            }
+        }
+        else
+        {
+            for (auto& n : nodes)
+            {
+                n.ChangeColor(sf::Color::White);
+            }
+        }
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
     {

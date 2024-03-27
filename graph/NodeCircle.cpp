@@ -69,18 +69,23 @@ void NodeCircle::setPosition(sf::Vector2i mousePosition)
 
 	for (auto& e : edges)
 	{
+		if (e.first.expired())
+		{
+			continue;
+		}
+		auto temp = e.first.lock();
 		if (e.second)
 		{
-			e.first.Update(position, e.first.getEndPosition(), true);
+			temp->Update(position, temp->getEndPosition(), true);
 		}
 		else
 		{
-			e.first.Update(e.first.getBeginingPosition(), position);
+			temp->Update(temp->getBeginingPosition(), position);
 		}
 	}
 }
 
-void NodeCircle::insertEdge(EdgeShape& edge, bool isPrimary)
+void NodeCircle::insertEdge(std::weak_ptr<EdgeShape> edge, bool isPrimary)
 {
 	edges.push_back({ edge, isPrimary });
 }
