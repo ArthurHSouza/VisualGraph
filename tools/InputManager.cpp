@@ -65,7 +65,7 @@ void InputManager::MouseButtonInput()
     if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
         if (deleteMode) return;
-        AddNodeOnPosition(sf::Mouse::getPosition(window));
+        AddNodeOnPosition((sf::Vector2i) window.mapPixelToCoords(sf::Mouse::getPosition(window)));
     }
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
@@ -84,14 +84,14 @@ void InputManager::MouseButtonInput()
             }*/
             std::erase_if<>(edges, 
                 [&](std::shared_ptr<EdgeShape>& e) {
-                  return  e->Select(sf::Mouse::getPosition(window));
+                  return  e->Select((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window)));
                 });
         }
         
         size_t i = 0;
         for (; i < nodes.size(); i++)
         {
-            if (nodes.at(i).Select(sf::Mouse::getPosition(window)))
+            if (nodes.at(i).Select((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window))))
             {
                 if (deleteMode)
                 {
@@ -163,7 +163,7 @@ void InputManager::Update()
     if (holding && !deleteMode && timeHolding.getElapsedTime().asSeconds() > timeToEdit)
     {
         editMode = true;
-        nodes.at(selectedNodeIndex.front()).setPosition(sf::Mouse::getPosition(window));
+        nodes.at(selectedNodeIndex.front()).setPosition((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window)));
     }
 }
 
