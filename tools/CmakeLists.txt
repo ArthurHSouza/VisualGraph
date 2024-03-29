@@ -1,5 +1,5 @@
-set(LIBRARY_SOURCES "AssetManager.cpp" "InputManager.cpp")
-set(LIBRARY_HEADERS "AssetManager.hpp" "InputManager.hpp")
+set(LIBRARY_SOURCES "AssetManager.cpp" "InputManager.cpp" "Camera.cpp")
+set(LIBRARY_HEADERS "AssetManager.hpp" "InputManager.hpp" "Camera.hpp")
 
 add_library(
 	${LIBRARY_TOOLS} STATIC

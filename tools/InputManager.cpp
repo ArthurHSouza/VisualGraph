@@ -1,7 +1,7 @@
 #include "InputManager.hpp"
 
-InputManager::InputManager(sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<std::shared_ptr<EdgeShape>>& edges) :
-    window{window}, nodes{nodes}, edges{edges}
+InputManager::InputManager(sf::RenderWindow& window, Camera& cam,std::vector<NodeCircle>& nodes, std::list<std::shared_ptr<EdgeShape>>& edges) :
+    window{window}, cam{cam}, nodes{nodes}, edges{edges}
 {
 }
 
@@ -56,6 +56,7 @@ void InputManager::DeleteEdge()
 
 void InputManager::MouseButtonRelease()
 {
+    isDragging = false;
     holding = false;
     if (editMode)
     {
@@ -70,7 +71,11 @@ void InputManager::MouseButtonRelease()
 
 void InputManager::MouseButtonInput()
 {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
+    {
+        isDragging = true;
+    }
+    else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
         if (deleteMode) return;
         AddNodeOnPosition((sf::Vector2i) window.mapPixelToCoords(sf::Mouse::getPosition(window)));
@@ -155,6 +160,42 @@ void InputManager::KeyboardInput()
 
 void InputManager::Update()
 {
+    for (auto event = sf::Event{}; window.pollEvent(event);)
+    {
+        if (event.type == sf::Event::Closed)
+        {
+            window.close();
+        }
+        else if (event.type == sf::Event::Resized)
+        {
+            cam.SetSize(event.size.width, event.size.height);
+        }
+        else if (event.type == sf::Event::MouseWheelScrolled)
+        {
+            cam.Zoom(event.mouseWheelScroll.delta);
+        }
+        else if (event.type == sf::Event::MouseButtonReleased)
+        {
+            MouseButtonRelease();
+        }
+        else if (event.type == sf::Event::MouseButtonPressed)
+        {
+            MouseButtonInput();
+        }
+        else if (event.type == sf::Event::KeyPressed)
+        {
+            KeyboardInput();
+        }
+        else if (event.type == sf::Event::MouseMoved)
+        {
+            mousePosition = sf::Mouse::getPosition(window);
+            if (isDragging) {
+                cam.DraggingCamera(mousePosition, previousMousePosition);
+            }
+            previousMousePosition = mousePosition;
+        }
+    }
+
     if (holding && !deleteMode && timeHolding.getElapsedTime().asSeconds() > timeToEdit)
     {
         editMode = true;
@@ -162,3 +203,4 @@ void InputManager::Update()
     }
 }
 
+    

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "NodeCircle.hpp"
 #include "EdgeShape.hpp"
+#include "Camera.hpp"
 
 class InputManager
 {
@@ -14,23 +15,29 @@ private:
     sf::RenderWindow& window;
     std::vector<NodeCircle>& nodes;
     std::list<std::shared_ptr<EdgeShape>>& edges;
+    Camera& cam;
     sf::Clock timeHolding;
+
     bool holding{ false };
     bool editMode{ false };
     bool deleteMode{ false };
+    bool isDragging{ false };
     const float timeToEdit{ 0.2f };
+    sf::Vector2i mousePosition;
+    sf::Vector2i previousMousePosition;
 
     void AddNodeOnPosition(sf::Vector2i&& position);
     void DeleteNode(size_t index);
     void AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition);
     void DeleteEdge();
 
-public:
-	InputManager(sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<std::shared_ptr<EdgeShape>>& edges) ;
-	~InputManager() = default;
-
     void MouseButtonRelease();
     void MouseButtonInput();
     void KeyboardInput();
+
+public:
+	InputManager(sf::RenderWindow& window, Camera& cam,std::vector<NodeCircle>& nodes, std::list<std::shared_ptr<EdgeShape>>& edges) ;
+	~InputManager() = default;
+
     void Update();
 };
