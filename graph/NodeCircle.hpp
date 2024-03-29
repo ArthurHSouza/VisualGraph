@@ -33,7 +33,7 @@ public:
 	void Draw(sf::RenderTarget& window) const override;
 	void FillWithDefinedColor(DefinedColor color) override;
 	bool Intersects(sf::FloatRect rect);
-	bool Select(sf::Vector2i&& mousePos) override;
+	bool Select(sf::Vector2i& mousePos) override;
 	void SetAsNotSelected();
 	void SetPosition(sf::Vector2i position);
 	void insertEdge(std::weak_ptr<EdgeShape> edge);

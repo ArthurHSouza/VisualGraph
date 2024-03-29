@@ -5,7 +5,7 @@ InputManager::InputManager(sf::RenderWindow& window, Camera& cam,std::vector<Nod
 {
 }
 
-void InputManager::AddNodeOnPosition(sf::Vector2i&& position)
+void InputManager::AddNodeOnPosition(sf::Vector2i& position)
 {
     sf::Rect<float> tempRect(sf::Vector2f(position), sf::Vector2f(2, 2));
     for (auto& i : nodes)
@@ -50,7 +50,7 @@ void InputManager::DeleteEdge()
 {
     std::erase_if(edges,
         [&](std::shared_ptr<EdgeShape>& e) {
-            return  e->Select((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+            return  e->Select(mousePosition);
         });
 }
 
@@ -78,7 +78,7 @@ void InputManager::MouseButtonInput()
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
         if (deleteMode) return;
-        AddNodeOnPosition((sf::Vector2i) window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+        AddNodeOnPosition(mousePosition);
     }
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
@@ -91,7 +91,7 @@ void InputManager::MouseButtonInput()
         
         for (size_t i = 0; i < nodes.size(); i++)
         {
-            if (nodes.at(i).Select((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+            if (nodes.at(i).Select(mousePosition))
             {
                 if (deleteMode)
                 {
@@ -131,7 +131,7 @@ void InputManager::KeyboardInput()
         nodes.clear();
         edges.clear();
     }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         deleteMode = !deleteMode;
         if (deleteMode)
@@ -188,7 +188,7 @@ void InputManager::Update()
         }
         else if (event.type == sf::Event::MouseMoved)
         {
-            mousePosition = sf::Mouse::getPosition(window);
+            mousePosition = (sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window));
             if (isDragging) {
                 cam.DraggingCamera(mousePosition, previousMousePosition);
             }
@@ -199,7 +199,7 @@ void InputManager::Update()
     if (holding && !deleteMode && timeHolding.getElapsedTime().asSeconds() > timeToEdit)
     {
         editMode = true;
-        nodes.at(selectedNodeIndex.front()).SetPosition((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+        nodes.at(selectedNodeIndex.front()).SetPosition(mousePosition);
     }
 }
 

@@ -47,7 +47,7 @@ void NodeCircle::FillWithDefinedColor(DefinedColor color)
 	}
 }
 
-bool NodeCircle::Select(sf::Vector2i&& mousePos)
+bool NodeCircle::Select(sf::Vector2i& mousePos)
 {
 	sf::Rect<float> mouseRec(sf::Vector2f(mousePos), sf::Vector2f(1,1));
 	if (circle.getGlobalBounds().intersects(mouseRec))

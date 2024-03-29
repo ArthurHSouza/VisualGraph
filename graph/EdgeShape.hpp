@@ -20,5 +20,5 @@ public:
 	const sf::Vector2i GetPosition() const override;
 	const sf::Vector2i GetEndPosition() const;
 
-	bool Select(sf::Vector2i&& mousePos) override;
+	bool Select(sf::Vector2i& mousePos) override;
 };

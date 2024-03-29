@@ -113,7 +113,7 @@ const sf::Vector2i EdgeShape::GetEndPosition() const
 	return endPosition;
 }
 
-bool EdgeShape::Select(sf::Vector2i&& mousePos)
+bool EdgeShape::Select(sf::Vector2i& mousePos)
 {
 	sf::Rect<float> mouseRec(sf::Vector2f(mousePos), sf::Vector2f(1, 1));
 	return collisionPoint.getGlobalBounds().intersects(mouseRec);
