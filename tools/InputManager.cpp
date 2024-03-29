@@ -42,8 +42,8 @@ void InputManager::AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPositi
 
     edges.emplace_back(std::make_shared<EdgeShape>(beginingPosition, endPosition));
 
-    nodes.at(selectedNodeIndex.front()).insertEdge(edges.back(), true);
-    nodes.at(selectedNodeIndex.back()).insertEdge(edges.back(), false);
+    nodes.at(selectedNodeIndex.front()).insertEdge(edges.back());
+    nodes.at(selectedNodeIndex.back()).insertEdge(edges.back());
 }
 
 void InputManager::MouseButtonRelease()

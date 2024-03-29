@@ -1,8 +1,8 @@
 #pragma once
 #include "VisualObject.hpp"
 #include <vector>
-#include <utility>
 #include <memory>
+#include <algorithm>
 #include "EdgeShape.hpp"
 
 class NodeCircle : public VisualObject
@@ -13,7 +13,7 @@ private:
 	sf::Text indexText;
 	const size_t index;
 	bool isSelected{ false };
-	std::vector<std::pair<std::weak_ptr<EdgeShape>, bool>> edges;
+	std::vector<std::weak_ptr<EdgeShape>> edges;
 
 public:
 	static size_t count;
@@ -36,15 +36,15 @@ public:
 	bool Select(sf::Vector2i&& mousePos) override;
 	void SetAsNotSelected();
 	void setPosition(sf::Vector2i position);
-	void insertEdge(std::weak_ptr<EdgeShape> edge, bool isPrimary);
+	void insertEdge(std::weak_ptr<EdgeShape> edge);
 	std::vector<std::shared_ptr<EdgeShape>> GetLinkedEdges()
 	{
 		std::vector<std::shared_ptr<EdgeShape>> temp;
 		for (auto& e : edges)
 		{
-			if (!e.first.expired())
+			if (!e.expired())
 			{
-				temp.push_back(e.first.lock());
+				temp.push_back(e.lock());
 			}
 		}
 		return temp;

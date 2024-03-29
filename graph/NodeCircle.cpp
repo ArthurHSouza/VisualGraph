@@ -78,18 +78,17 @@ void NodeCircle::SetAsNotSelected()
 
 void NodeCircle::setPosition(sf::Vector2i mousePosition)
 {
-	this->position = mousePosition;
+	sf::Vector2i previusPosition = position;
+	position = mousePosition;
 	circle.setPosition(sf::Vector2f(position));
 	indexText.setPosition(sf::Vector2f(position));
 
-	for (auto& e : edges)
+	std::erase_if(edges, [](auto& e) {return e.expired(); });
+
+	for (auto& e : edges )
 	{
-		if (e.first.expired())
-		{
-			continue;
-		}
-		auto temp = e.first.lock();
-		if (e.second)
+		auto temp = e.lock();
+		if (temp->GetPosition() == previusPosition)
 		{
 			temp->Update(position, temp->GetEndPosition(), true);
 		}
@@ -100,9 +99,9 @@ void NodeCircle::setPosition(sf::Vector2i mousePosition)
 	}
 }
 
-void NodeCircle::insertEdge(std::weak_ptr<EdgeShape> edge, bool isPrimary)
+void NodeCircle::insertEdge(std::weak_ptr<EdgeShape> edge)
 {
-	edges.push_back({ edge, isPrimary });
+	edges.push_back(edge);
 }
 
 const size_t NodeCircle::GetIndex() const
