@@ -8,6 +8,7 @@ Camera::Camera(sf::RenderWindow& window)
 	originalViewSize = view.getSize();
 }
 
+
 void Camera::Zoom(const float& delta)
 {
 	if (delta < 0 && (view.getSize().x / originalViewSize.x) < maxZoomOut)

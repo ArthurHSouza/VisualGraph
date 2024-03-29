@@ -1,10 +1,5 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
- # set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
-
 project ("VisualGraph" VERSION 1.0.0 DESCRIPTION "Think on this later" LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -29,6 +24,11 @@ endif()
 if(ENABLE_ADRESS_SANITIZER)
 	include(AdressSanitizer)
 	add_adress_sanitizer_flags()
+endif()
+
+if (POLICY CMP0141 AND NOT ENABLE_ADRESS_SANITIZER)
+	cmake_policy(SET CMP0141 NEW)
+	set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
 include(FetchContent)

@@ -1,6 +1,6 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <vector>
-#include <list>
+#include <forward_list>
 #include <array>
 #include <string>
 #include <memory>
@@ -12,34 +12,34 @@
 
 int main()
 {
-    std::vector<NodeCircle> nodesCircle; 
-    std::list<std::shared_ptr<EdgeShape>> edgesShape;
+	std::vector<NodeCircle> nodesCircle;
+	std::forward_list<std::shared_ptr<EdgeShape>> edgesShape;
 
-    auto window = sf::RenderWindow{ { 1920u, 1080u}, "CMake SFML Project"};
-    window.setFramerateLimit(144);
-    Camera cam(window);
-    
-    InputManager inputManager(window, cam,nodesCircle, edgesShape);
+	auto window = sf::RenderWindow{ { 1920u, 1080u}, "CMake SFML Project" };
+	window.setFramerateLimit(144);
+	Camera cam(window);
 
-    while (window.isOpen())
-    {
-        window.setView(cam.GetView());
-        
-        inputManager.Update();
+	InputManager inputManager(window, cam, nodesCircle, edgesShape);
 
-        window.clear(sf::Color::White);
-        
-        for (auto& e : edgesShape)
-        {
-            e->Draw(window);
-        }
-        for (auto& node : nodesCircle)
-        {
-            node.Draw(window);
-        }
+	while (window.isOpen())
+	{
+		window.setView(cam.GetView());
 
-        window.display();
-    }
-   
-    return 0;
+		inputManager.Update();
+
+		window.clear(sf::Color::White);
+
+		for (auto& e : edgesShape)
+		{
+			e->Draw(window);
+		}
+		for (auto& node : nodesCircle)
+		{
+			node.Draw(window);
+		}
+
+		window.display();
+	}
+
+	return 0;
 }

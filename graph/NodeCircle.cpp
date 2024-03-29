@@ -6,18 +6,18 @@
 size_t NodeCircle::count = 0;
 
 NodeCircle::NodeCircle(sf::Vector2i position) :
-	VisualObject(position,50.f, sf::Color::White, sf::Color::Blue, sf::Color::Red), index{count++}, outlineColor{ sf::Color::Black }
+	VisualObject(position, 50.f, sf::Color::White, sf::Color::Blue, sf::Color::Red), index{ count++ }, outlineColor{ sf::Color::Black }
 {
 	circle.setRadius(size);
 	circle.setFillColor(defaultColor);
-	circle.setOutlineThickness(size*0.1f);
+	circle.setOutlineThickness(size * 0.1f);
 	circle.setOutlineColor(outlineColor);
 	circle.setOrigin(circle.getGlobalBounds().getSize() / 2.f);
 	circle.setPosition(sf::Vector2f(position));
 
 	indexText.setString(std::to_string(index));
 	indexText.setFont(AssetManager<sf::Font>::Get("assets/Square.ttf"));
-	indexText.setOrigin(indexText.getGlobalBounds().getSize()/2.f + indexText.getGlobalBounds().getPosition());
+	indexText.setOrigin(indexText.getGlobalBounds().getSize() / 2.f + indexText.getGlobalBounds().getPosition());
 	indexText.setFillColor(sf::Color::Black);
 	indexText.setPosition(sf::Vector2f(position));
 
@@ -49,7 +49,8 @@ void NodeCircle::FillWithDefinedColor(DefinedColor color)
 
 bool NodeCircle::Select(sf::Vector2i& mousePos)
 {
-	sf::Rect<float> mouseRec(sf::Vector2f(mousePos), sf::Vector2f(1,1));
+	sf::Rect<float> mouseRec(sf::Vector2f(mousePos), sf::Vector2f(1, 1));
+	
 	if (circle.getGlobalBounds().intersects(mouseRec))
 	{
 		isSelected = !isSelected;
@@ -85,7 +86,7 @@ void NodeCircle::SetPosition(sf::Vector2i mousePosition)
 
 	std::erase_if(edges, [](auto& e) {return e.expired(); });
 
-	for (auto& e : edges )
+	for (auto& e : edges)
 	{
 		auto temp = e.lock();
 		if (temp->GetPosition() == previusPosition)
