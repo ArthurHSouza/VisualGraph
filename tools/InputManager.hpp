@@ -23,6 +23,7 @@ private:
     void AddNodeOnPosition(sf::Vector2i&& position);
     void DeleteNode(size_t index);
     void AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition);
+    void DeleteEdge();
 
 public:
 	InputManager(sf::RenderWindow& window, std::vector<NodeCircle>& nodes, std::list<std::shared_ptr<EdgeShape>>& edges) ;

@@ -50,7 +50,7 @@ int main()
             {
                 if (event.mouseWheelScroll.delta < 0 && (cam.getSize().x / originalViewSize.x) < maxZoomOut)
                 {
-                    cam.zoom(1.1);
+                    cam.zoom(1.1f);
                 }
                 else  if (event.mouseWheelScroll.delta > 0 && (cam.getSize().x / originalViewSize.x) > maxZoomIn)
                 {

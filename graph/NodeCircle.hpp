@@ -35,20 +35,9 @@ public:
 	bool Intersects(sf::FloatRect rect);
 	bool Select(sf::Vector2i&& mousePos) override;
 	void SetAsNotSelected();
-	void setPosition(sf::Vector2i position);
+	void SetPosition(sf::Vector2i position);
 	void insertEdge(std::weak_ptr<EdgeShape> edge);
-	std::vector<std::shared_ptr<EdgeShape>> GetLinkedEdges()
-	{
-		std::vector<std::shared_ptr<EdgeShape>> temp;
-		for (auto& e : edges)
-		{
-			if (!e.expired())
-			{
-				temp.push_back(e.lock());
-			}
-		}
-		return temp;
-	}
+	std::vector<std::shared_ptr<EdgeShape>> GetLinkedEdges();
 	const size_t GetIndex() const;
 	const sf::Vector2i GetPosition() const override;
 	const bool GetIsSelected() const;

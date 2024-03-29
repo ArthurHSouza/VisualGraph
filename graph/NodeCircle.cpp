@@ -76,7 +76,7 @@ void NodeCircle::SetAsNotSelected()
 	circle.setFillColor(sf::Color::White);
 }
 
-void NodeCircle::setPosition(sf::Vector2i mousePosition)
+void NodeCircle::SetPosition(sf::Vector2i mousePosition)
 {
 	sf::Vector2i previusPosition = position;
 	position = mousePosition;
@@ -102,6 +102,19 @@ void NodeCircle::setPosition(sf::Vector2i mousePosition)
 void NodeCircle::insertEdge(std::weak_ptr<EdgeShape> edge)
 {
 	edges.push_back(edge);
+}
+
+std::vector<std::shared_ptr<EdgeShape>> NodeCircle::GetLinkedEdges()
+{
+	std::vector<std::shared_ptr<EdgeShape>> temp;
+	for (auto& e : edges)
+	{
+		if (!e.expired())
+		{
+			temp.push_back(e.lock());
+		}
+	}
+	return temp;
 }
 
 const size_t NodeCircle::GetIndex() const

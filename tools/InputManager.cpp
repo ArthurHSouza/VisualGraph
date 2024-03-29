@@ -22,8 +22,8 @@ void InputManager::DeleteNode(size_t index)
 
     for (auto& e : edegesAdress)
     {
-        std::erase_if<>(edges,
-            [&](auto element) {return &*element == &*e; });
+        std::erase_if(edges,
+            [&e](auto element) {return &*element == &*e; });
     }
 
     nodes.erase(nodes.begin() + index);
@@ -44,6 +44,14 @@ void InputManager::AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPositi
 
     nodes.at(selectedNodeIndex.front()).insertEdge(edges.back());
     nodes.at(selectedNodeIndex.back()).insertEdge(edges.back());
+}
+
+void InputManager::DeleteEdge()
+{
+    std::erase_if(edges,
+        [&](std::shared_ptr<EdgeShape>& e) {
+            return  e->Select((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+        });
 }
 
 void InputManager::MouseButtonRelease()
@@ -73,23 +81,10 @@ void InputManager::MouseButtonInput()
      
         if (deleteMode)
         {
-            /*for (auto& e : edges)
-            {
-                if (e->Select(sf::Mouse::getPosition(window)))
-                {
-                    std::erase_if<>(edges,
-                        [&](auto element) {return &*element == &*e; });
-                    return;
-                }
-            }*/
-            std::erase_if<>(edges, 
-                [&](std::shared_ptr<EdgeShape>& e) {
-                  return  e->Select((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window)));
-                });
+            DeleteEdge();
         }
         
-        size_t i = 0;
-        for (; i < nodes.size(); i++)
+        for (size_t i = 0; i < nodes.size(); i++)
         {
             if (nodes.at(i).Select((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window))))
             {
@@ -163,7 +158,7 @@ void InputManager::Update()
     if (holding && !deleteMode && timeHolding.getElapsedTime().asSeconds() > timeToEdit)
     {
         editMode = true;
-        nodes.at(selectedNodeIndex.front()).setPosition((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+        nodes.at(selectedNodeIndex.front()).SetPosition((sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window)));
     }
 }
 
