@@ -18,5 +18,7 @@ target_link_libraries(
 	${LIBRARY_GRAPH} 
 )
 
-TARGET_SET_WARNINGS(${LIBRARY_TOOLS} on)
+if(ENABLE_ALL_WARNINGS)
+	TARGET_SET_WARNINGS(${LIBRARY_TOOLS} on)
+endif()
 

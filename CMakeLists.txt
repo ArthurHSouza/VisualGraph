@@ -2,7 +2,7 @@
 
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+ # set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
 project ("VisualGraph" VERSION 1.0.0 DESCRIPTION "Think on this later" LANGUAGES CXX)
@@ -14,16 +14,22 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-#if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-#	add_compile_options("/O2/Wall")
-#endif()
-
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 set(LIBRARY_TOOLS "tools")
 set(LIBRARY_GRAPH "graph")
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
-include(Warnings)
+option(ENABLE_ALL_WARNINGS ON)
+option(ENABLE_ADRESS_SANITIZER OFF)
+
+if(ENABLE_ALL_WARNINGS)
+	include(Warnings)
+endif()
+
+if(ENABLE_ADRESS_SANITIZER)
+	include(AdressSanitizer)
+	add_adress_sanitizer_flags()
+endif()
 
 include(FetchContent)
 FetchContent_Declare(

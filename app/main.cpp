@@ -19,8 +19,6 @@ int main()
     window.setFramerateLimit(144);
     Camera cam(window);
     
-    bool isDragging{ false };
-
     InputManager inputManager(window, cam,nodesCircle, edgesShape);
 
     while (window.isOpen())
@@ -42,5 +40,6 @@ int main()
 
         window.display();
     }
+   
     return 0;
 }
