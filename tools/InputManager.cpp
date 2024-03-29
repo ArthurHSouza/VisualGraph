@@ -27,6 +27,12 @@ void InputManager::DeleteNode(size_t index)
     }
 
     nodes.erase(nodes.begin() + index);
+    
+    if (nodes.empty())
+    {
+        deleteMode = false;
+    }
+    
     return;
 }
 
