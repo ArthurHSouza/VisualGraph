@@ -199,10 +199,12 @@ void InputManager::Update()
 		else if (event.type == sf::Event::MouseMoved)
 		{
 			mousePosition = (sf::Vector2i)window.mapPixelToCoords(sf::Mouse::getPosition(window));
+			sf::Vector2i mousePositionPixel = window.mapCoordsToPixel((sf::Vector2f)mousePosition);
 			if (isDragging) {
-				cam.DraggingCamera(mousePosition, previousMousePosition);
+
+				cam.DraggingCamera(mousePositionPixel, previousMousePosition);
 			}
-			previousMousePosition = mousePosition;
+			previousMousePosition = mousePositionPixel;
 		}
 	}
 

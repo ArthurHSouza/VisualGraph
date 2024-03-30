@@ -13,7 +13,7 @@ public:
 	~Camera() = default;
 
 	void Zoom(const float& delta);
-	void DraggingCamera(sf::Vector2i previusMousePosition, sf::Vector2i mousePosition);
+	void DraggingCamera(const sf::Vector2i& mousePosition, const sf::Vector2i& previusMousePosition);
 	void SetSize(int x, int y);
 	const sf::View GetView() const;
 };

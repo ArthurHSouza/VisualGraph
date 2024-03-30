@@ -21,7 +21,7 @@ void Camera::Zoom(const float& delta)
 	}
 }
 
-void Camera::DraggingCamera(sf::Vector2i mousePosition, sf::Vector2i previusMousePosition)
+void Camera::DraggingCamera(const sf::Vector2i& mousePosition, const sf::Vector2i& previusMousePosition)
 {
 	const sf::Vector2f delta = sf::Vector2f(mousePosition - previusMousePosition);
 	view.move(-delta);
