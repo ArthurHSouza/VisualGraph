@@ -21,7 +21,7 @@ EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
 	arrowRect.setPosition(sf::Vector2f(begining));
 	arrowRect.setFillColor(defaultColor);
 
-	float rotationDegrees = std::asinf(difX / dist) * 180.f/std::numbers::pi_v<float>;
+	float rotationDegrees = asinf(difX / dist) * 180.f/std::numbers::pi_v<float>;
 	if (end.y < begining.y && end.x < begining.x)
 	{
 		rotationDegrees *= -1;
@@ -58,11 +58,11 @@ void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChange
 		arrowRect.setPosition(sf::Vector2f(begining));
 	}
 	int difX = std::abs(end.x - begining.x);
-	float dist = std::sqrtf(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
+	float dist = sqrtf(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
 	
 	arrowRect.setScale(1, dist / arrowRect.getSize().y);
 
-	float rotationDegrees = std::asinf(difX / dist) * 180.f / std::numbers::pi_v<float>;
+	float rotationDegrees = asinf(difX / dist) * 180.f / std::numbers::pi_v<float>;
 	if ((end.y == begining.y || end.y < begining.y) && end.x < begining.x)
 	{
 		rotationDegrees *= -1;
