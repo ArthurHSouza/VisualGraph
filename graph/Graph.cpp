@@ -24,7 +24,7 @@ Graph::Graph(std::size_t ammoutVertex)
 	std::queue<int> Q;
 
 	Q.push(sourceIndex);
-
+	ret.push_back({ sourceIndex, dist[sourceIndex] });
 	while (!Q.empty())
 	{
 		int u = Q.front();
@@ -35,8 +35,7 @@ Graph::Graph(std::size_t ammoutVertex)
 			if (visted[i] == Color::WHITE)
 			{
 				visted[i] = Color::GRAY;
-				dist[i]++;
-				//ngc de antecessores
+				dist[i] = dist[u] + 1;
 				Q.push(i);
 				ret.push_back({ i, dist[i] });
 			}
@@ -50,4 +49,5 @@ Graph::Graph(std::size_t ammoutVertex)
 void Graph::AddEdges(int source, int destination)
 {
 	adjList[source].push_back(destination);
+	adjList[destination].push_back(source);
 }

@@ -21,6 +21,9 @@ void NodeCircle::Draw(sf::RenderTarget& window) const
 {
 	window.draw(circle);
 	indexText.Draw(window);
+
+	if (extraText.has_value())
+		extraText->Draw(window);
 }
 
 void NodeCircle::FillWithDefinedColor(DefinedColor color)
@@ -94,9 +97,14 @@ void NodeCircle::SetPosition(sf::Vector2i mousePosition)
 	}
 }
 
-void NodeCircle::insertEdge(std::weak_ptr<EdgeShape> edge)
+void NodeCircle::InsertEdge(std::weak_ptr<EdgeShape> edge)
 {
 	edges.push_back(edge);
+}
+
+void NodeCircle::AddText(std::string text)
+{
+	extraText.emplace(text, (sf::Vector2f)position + sf::Vector2f(0.f, -circle.getRadius() * 1.2f), 30, sf::Color::Green);
 }
 
 std::vector<std::shared_ptr<EdgeShape>> NodeCircle::GetLinkedEdges()

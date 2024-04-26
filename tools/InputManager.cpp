@@ -1,5 +1,6 @@
 #include "InputManager.hpp"
 #include "Graph.hpp"
+#include "utility"
 
 InputManager::InputManager(sf::RenderWindow& window, Camera& cam, std::vector<NodeCircle>& nodes, std::forward_list<std::shared_ptr<EdgeShape>>& edges) :
 	window{ window }, cam{ cam }, nodes{ nodes }, edges{ edges }
@@ -50,8 +51,8 @@ void InputManager::AddEdge(NodeCircle& begining, NodeCircle end)
 	edges.emplace_front(std::make_shared<EdgeShape>(begining.GetIndex(), end.GetIndex(), 
 		begining.GetPosition(), end.GetPosition()));
 
-	nodes.at(selectedNodeIndex.front()).insertEdge(edges.front());
-	nodes.at(selectedNodeIndex.back()).insertEdge(edges.front());
+	nodes.at(selectedNodeIndex.front()).InsertEdge(edges.front());
+	nodes.at(selectedNodeIndex.back()).InsertEdge(edges.front());
 }
 
 void InputManager::DeleteEdge()
@@ -175,7 +176,11 @@ void InputManager::KeyboardInput()
 		{
 			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
 		}
-		g.BFS(0);
+		auto result = g.BFS(0);
+		for (const auto& r : result)
+		{
+			nodes.at(r.first).AddText(std::to_string(r.second));
+		}
 	}
 }
 

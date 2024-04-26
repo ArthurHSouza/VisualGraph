@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <optional>
 #include "EdgeShape.hpp"
 #include "SelectableVisualObject.hpp"
 #include "VisualText.hpp"
@@ -12,6 +13,7 @@ private:
 	sf::CircleShape circle;
 	sf::Color outlineColor;
 	VisualText indexText;
+	std::optional<VisualText> extraText;
 	const size_t index;
 	bool isSelected{ false };
 	std::vector<std::weak_ptr<EdgeShape>> edges;
@@ -37,7 +39,8 @@ public:
 	bool Select(sf::Vector2i& mousePos) override;
 	void SetAsNotSelected();
 	void SetPosition(sf::Vector2i position);
-	void insertEdge(std::weak_ptr<EdgeShape> edge);
+	void InsertEdge(std::weak_ptr<EdgeShape> edge);
+	void AddText(std::string text);
 	std::vector<std::shared_ptr<EdgeShape>> GetLinkedEdges();
 	const size_t GetIndex() const;
 	const sf::Vector2i GetPosition() const override;
