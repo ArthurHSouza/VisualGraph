@@ -4,13 +4,14 @@
 #include <memory>
 #include <algorithm>
 #include "EdgeShape.hpp"
+#include "VisualText.hpp"
 
 class NodeCircle : public VisualObject
 {
 private:
 	sf::CircleShape circle;
 	sf::Color outlineColor;
-	sf::Text indexText;
+	VisualText indexText;
 	const size_t index;
 	bool isSelected{ false };
 	std::vector<std::weak_ptr<EdgeShape>> edges;

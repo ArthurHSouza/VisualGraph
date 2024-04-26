@@ -6,7 +6,8 @@
 size_t NodeCircle::count = 0;
 
 NodeCircle::NodeCircle(sf::Vector2i position) :
-	VisualObject(position, 50.f, sf::Color::White, sf::Color::Blue, sf::Color::Red), index{ count++ }, outlineColor{ sf::Color::Black }
+	VisualObject(position, 50.f, sf::Color::White, sf::Color::Blue, sf::Color::Red), outlineColor{ sf::Color::Black }, 
+	indexText(std::to_string(count), (sf::Vector2f)position), index{ count++ }
 {
 	circle.setRadius(size);
 	circle.setFillColor(defaultColor);
@@ -14,19 +15,12 @@ NodeCircle::NodeCircle(sf::Vector2i position) :
 	circle.setOutlineColor(outlineColor);
 	circle.setOrigin(circle.getGlobalBounds().getSize() / 2.f);
 	circle.setPosition(sf::Vector2f(position));
-
-	indexText.setString(std::to_string(index));
-	indexText.setFont(AssetManager<sf::Font>::Get("assets/Square.ttf"));
-	indexText.setOrigin(indexText.getGlobalBounds().getSize() / 2.f + indexText.getGlobalBounds().getPosition());
-	indexText.setFillColor(sf::Color::Black);
-	indexText.setPosition(sf::Vector2f(position));
-
 }
 
 void NodeCircle::Draw(sf::RenderTarget& window) const
 {
 	window.draw(circle);
-	window.draw(indexText);
+	indexText.Draw(window);
 }
 
 void NodeCircle::FillWithDefinedColor(DefinedColor color)
@@ -82,7 +76,7 @@ void NodeCircle::SetPosition(sf::Vector2i mousePosition)
 	sf::Vector2i previusPosition = position;
 	position = mousePosition;
 	circle.setPosition(sf::Vector2f(position));
-	indexText.setPosition(sf::Vector2f(position));
+	indexText.SetPosition(position);
 
 	std::erase_if(edges, [](auto& e) {return e.expired(); });
 
