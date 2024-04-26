@@ -1,12 +1,12 @@
 #pragma once
-#include "VisualObject.hpp"
 #include <vector>
 #include <memory>
 #include <algorithm>
 #include "EdgeShape.hpp"
+#include "SelectableVisualObject.hpp"
 #include "VisualText.hpp"
 
-class NodeCircle : public VisualObject
+class NodeCircle : public SelectableVisualObject
 {
 private:
 	sf::CircleShape circle;

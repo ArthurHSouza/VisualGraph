@@ -3,7 +3,7 @@
 #include <cmath>
 
 EdgeShape::EdgeShape(int begningIndex, int endIndex, sf::Vector2i begining, sf::Vector2i end) :
-	VisualObject(begining, 10.f, sf::Color::Black, sf::Color::Blue, sf::Color::Red), 
+	SelectableVisualObject(begining, 10.f, sf::Color::Black, sf::Color::Blue, sf::Color::Red),
 	begningIndex{begningIndex}, endIndex{endIndex}, endPosition{end}
 {
 	collisionPoint.setSize(sf::Vector2f(20.f,20.f));
@@ -89,13 +89,13 @@ void EdgeShape::FillWithDefinedColor(DefinedColor color)
 	drawCollisionPoint = false;
 	switch (color)
 	{
-	case VisualObject::DefinedColor::DefaultColor:
+	case SelectableVisualObject::DefinedColor::DefaultColor:
 		arrowRect.setFillColor(defaultColor);
 		break;
-	case VisualObject::DefinedColor::SelectedColor:
+	case SelectableVisualObject::DefinedColor::SelectedColor:
 		arrowRect.setFillColor(selectedColor);
 		break;
-	case VisualObject::DefinedColor::DeleteColor:
+	case SelectableVisualObject::DefinedColor::DeleteColor:
 		drawCollisionPoint = true;
 		arrowRect.setFillColor(deleteColor);
 		break;

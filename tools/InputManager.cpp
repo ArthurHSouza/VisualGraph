@@ -147,14 +147,14 @@ void InputManager::KeyboardInput()
 			for (auto& n : nodes)
 			{
 				n.SetAsNotSelected();
-				n.FillWithDefinedColor(VisualObject::DefinedColor::DeleteColor);
+				n.FillWithDefinedColor(SelectableVisualObject::DefinedColor::DeleteColor);
 			}
-			for (auto& e : edges) e->FillWithDefinedColor(VisualObject::DefinedColor::DeleteColor);
+			for (auto& e : edges) e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::DeleteColor);
 		}
 		else
 		{
-			for (auto& n : nodes) n.FillWithDefinedColor(VisualObject::DefinedColor::DefaultColor);
-			for (auto& e : edges) e->FillWithDefinedColor(VisualObject::DefinedColor::DefaultColor);
+			for (auto& n : nodes) n.FillWithDefinedColor(SelectableVisualObject::DefinedColor::DefaultColor);
+			for (auto& e : edges) e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::DefaultColor);
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))

@@ -1,8 +1,7 @@
 #pragma once
-#include "VisualObject.hpp"
-#include <iostream>
+#include "SelectableVisualObject.hpp"
 
-class EdgeShape : public VisualObject
+class EdgeShape : public SelectableVisualObject
 {
 private:
 	const int begningIndex;

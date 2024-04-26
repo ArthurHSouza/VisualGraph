@@ -6,7 +6,7 @@
 size_t NodeCircle::count = 0;
 
 NodeCircle::NodeCircle(sf::Vector2i position) :
-	VisualObject(position, 50.f, sf::Color::White, sf::Color::Blue, sf::Color::Red), outlineColor{ sf::Color::Black }, 
+	SelectableVisualObject(position, 50.f, sf::Color::White, sf::Color::Blue, sf::Color::Red), outlineColor{ sf::Color::Black }, 
 	indexText(std::to_string(count), (sf::Vector2f)position), index{ count++ }
 {
 	circle.setRadius(size);
@@ -27,13 +27,13 @@ void NodeCircle::FillWithDefinedColor(DefinedColor color)
 {
 	switch (color)
 	{
-	case VisualObject::DefinedColor::DefaultColor:
+	case SelectableVisualObject::DefinedColor::DefaultColor:
 		circle.setFillColor(defaultColor);
 		break;
-	case VisualObject::DefinedColor::SelectedColor:
+	case SelectableVisualObject::DefinedColor::SelectedColor:
 		circle.setFillColor(selectedColor);
 		break;
-	case VisualObject::DefinedColor::DeleteColor:
+	case SelectableVisualObject::DefinedColor::DeleteColor:
 		circle.setFillColor(deleteColor);
 		break;
 	default:
