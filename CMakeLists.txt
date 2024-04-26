@@ -10,8 +10,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(EXECUTABLE_NAME ${PROJECT_NAME})
+set(LIBRARY_GRAPH "graph")
 set(LIBRARY_TOOLS "tools")
-set(LIBRARY_GRAPH "visual")
+set(LIBRARY_VISUAL "visual")
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 option(ENABLE_ALL_WARNINGS ON)
@@ -41,6 +42,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SFML)
 
 file(COPY ${PROJECT_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR}/bin)
+add_subdirectory(graph)
 add_subdirectory(tools)
 add_subdirectory(visual)
 add_subdirectory(app)

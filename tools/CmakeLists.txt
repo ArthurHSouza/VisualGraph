@@ -15,7 +15,8 @@ target_include_directories(
 target_link_libraries(
 	${LIBRARY_TOOLS} PUBLIC
 	sfml-graphics
-	${LIBRARY_GRAPH} 
+	${LIBRARY_GRAPH}
+	${LIBRARY_VISUAL}
 )
 
 if(ENABLE_ALL_WARNINGS)

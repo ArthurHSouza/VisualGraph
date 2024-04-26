@@ -28,7 +28,7 @@ private:
 
 	void AddNodeOnPosition(sf::Vector2i& position);
 	void DeleteNode(size_t index);
-	void AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition);
+	void AddEdge(NodeCircle& begining, NodeCircle end);
 	void DeleteEdge();
 
 	void MouseButtonRelease();

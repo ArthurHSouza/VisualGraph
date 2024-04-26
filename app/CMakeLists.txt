@@ -13,6 +13,7 @@ target_include_directories(
 target_link_libraries(
 	${EXECUTABLE_NAME} PUBLIC
 	${LIBRARY_GRAPH}
+	${LIBRARY_VISUAL}
 	sfml-graphics
 )
 

@@ -1,4 +1,5 @@
 #include "InputManager.hpp"
+#include "Graph.hpp"
 
 InputManager::InputManager(sf::RenderWindow& window, Camera& cam, std::vector<NodeCircle>& nodes, std::forward_list<std::shared_ptr<EdgeShape>>& edges) :
 	window{ window }, cam{ cam }, nodes{ nodes }, edges{ edges }
@@ -36,17 +37,18 @@ void InputManager::DeleteNode(size_t index)
 	return;
 }
 
-void InputManager::AddEdge(sf::Vector2i beginingPosition, sf::Vector2i endPosition)
+void InputManager::AddEdge(NodeCircle& begining, NodeCircle end)
 {
 	for (auto& e : edges)
 	{
-		if (e->GetPosition() == beginingPosition && e->GetEndPosition() == endPosition)
+		if (e->GetPosition() == begining.GetPosition() && e->GetEndPosition() == end.GetPosition())
 		{
 			return;
 		}
 	}
 
-	edges.emplace_front(std::make_shared<EdgeShape>(beginingPosition, endPosition));
+	edges.emplace_front(std::make_shared<EdgeShape>(begining.GetIndex(), end.GetIndex(), 
+		begining.GetPosition(), end.GetPosition()));
 
 	nodes.at(selectedNodeIndex.front()).insertEdge(edges.front());
 	nodes.at(selectedNodeIndex.back()).insertEdge(edges.front());
@@ -117,8 +119,8 @@ void InputManager::MouseButtonInput()
 		if (selectedNodeIndex.size() == 2)
 		{
 			AddEdge(
-				nodes.at(selectedNodeIndex.front()).GetPosition(),
-				nodes.at(selectedNodeIndex.back()).GetPosition()
+				nodes.at(selectedNodeIndex.front()),
+				nodes.at(selectedNodeIndex.back())
 			);
 			for (auto& v : nodes) v.SetAsNotSelected();
 		}
@@ -165,6 +167,15 @@ void InputManager::KeyboardInput()
 		{
 			std::cout << "screenshot saved to " << fileName << std::endl;
 		}
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) || sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad1))
+	{
+		Graph g = Graph(nodes.size());
+		for (const auto& e : edges)
+		{
+			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
+		}
+		g.BFS(0);
 	}
 }
 

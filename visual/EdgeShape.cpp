@@ -2,8 +2,9 @@
 #include <numbers>
 #include <cmath>
 
-EdgeShape::EdgeShape(sf::Vector2i begining, sf::Vector2i end) :
-	VisualObject(begining, 10.f, sf::Color::Black, sf::Color::Blue, sf::Color::Red), endPosition{end}
+EdgeShape::EdgeShape(int begningIndex, int endIndex, sf::Vector2i begining, sf::Vector2i end) :
+	VisualObject(begining, 10.f, sf::Color::Black, sf::Color::Blue, sf::Color::Red), 
+	begningIndex{begningIndex}, endIndex{endIndex}, endPosition{end}
 {
 	collisionPoint.setSize(sf::Vector2f(20.f,20.f));
 	collisionPoint.setOrigin(collisionPoint.getGlobalBounds().getSize() / 2.f);
@@ -111,6 +112,16 @@ const sf::Vector2i EdgeShape::GetPosition() const
 const sf::Vector2i EdgeShape::GetEndPosition() const
 {
 	return endPosition;
+}
+
+const int EdgeShape::GetBeginingIndex() const
+{
+	return begningIndex;
+}
+
+const int EdgeShape::GetEndIndex() const
+{
+	return endIndex;
 }
 
 bool EdgeShape::Select(sf::Vector2i& mousePos)
