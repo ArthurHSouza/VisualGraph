@@ -13,9 +13,9 @@ Graph::Graph(std::size_t ammoutVertex)
 	}
 }
 
-[[nodiscard]] std::vector<Graph::graphEdge> Graph::BFS(int sourceIndex)
+[[nodiscard]] std::vector<GraphEdge> Graph::BFS(int sourceIndex)
 {
-	std::vector<graphEdge> ret;
+	std::vector<GraphEdge> ret;
 	for (int i{}; i < adjList.size(); i++)
 	{
 		visted.push_back(Color::WHITE);
@@ -49,58 +49,33 @@ Graph::Graph(std::size_t ammoutVertex)
 	return ret;
 }
 
-std::vector<Graph::graphEdge> Graph::DFS(int sourceIndex)
+std::vector<GraphEdge> Graph::DFS(int sourceIndex)
 {
-	std::vector<graphEdge> ret;
-
-	std::stack<std::size_t> S;
-
-	S.push(sourceIndex);
+	std::vector<GraphEdge> ret;
 
 	for (int i{}; i < adjList.size(); i++)
 	{
 		visted.push_back(Color::WHITE);
+		dist.push_back(std::numeric_limits<int>::infinity());
 	}
-	/*
-	while (!S.empty())
-	{
-		std::size_t actual = S.top();
-		S.pop();
-		if (visted[actual] == Color::WHITE)
-		{
-			visted[actual] == Color::BLACK;
-
-			for (const auto& i : adjList[actual])
-			{
-				if (visted[i] == Color::WHITE)
-					S.push(i);
-			}
-			if(!S.empty())
-				ret.emplace_back(actual, S.top(), 0);
-		}
-	}
-	*/
-
-	visted[sourceIndex] = Color::BLACK;
-	while (!S.empty())
-	{
-		std::size_t actual = S.top();
-		S.pop();
-
-		std::cout << actual << " ";
-		for (const auto& i : adjList[actual])
-		{
-			if (visted[i] == Color::WHITE)
-			{
-				S.push(i);
-				visted[i] = Color::BLACK;
-			}
-		}
-		if(!S.empty())
-			ret.emplace_back(actual, S.top());
-	}
+	
+	DFSRecursive(sourceIndex, ret);
 
 	return ret;
+}
+
+
+void Graph::DFSRecursive(int sourceIndex, std::vector<GraphEdge>& ret)
+{
+	visted[sourceIndex] = Color::BLACK;
+	for (const auto& adj : adjList[sourceIndex])
+	{
+		if (visted[adj] == Color::WHITE)
+		{
+			ret.emplace_back(sourceIndex, adj, 0);
+			DFSRecursive(adj, ret);
+		}
+	}
 }
 
 void Graph::AddEdges(int source, int destination)

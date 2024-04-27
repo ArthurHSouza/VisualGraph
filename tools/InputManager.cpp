@@ -46,8 +46,8 @@ void InputManager::AddEdge(NodeCircle& begining, NodeCircle end)
 			return;
 		}
 	}
-
-	edges.emplace_front(std::make_shared<EdgeShape>(begining.GetIndex(), end.GetIndex(), 
+	
+	edges.emplace_front(std::make_shared<EdgeShape>(begining.GetIndex(), end.GetIndex(),
 		begining.GetPosition(), end.GetPosition()));
 
 	nodes.at(selectedNodeIndex.front()).InsertEdge(edges.front());
