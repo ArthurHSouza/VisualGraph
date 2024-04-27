@@ -3,7 +3,7 @@
 #include <limits>
 #include <queue>
 #include <iostream>
-#include <utility>
+#include <tuple>
 
 class Graph
 {
@@ -17,11 +17,19 @@ private:
 	std::vector<int> dist;
 
 public:
+
+	struct graphEdge 
+	{
+		std::size_t origin;
+		std::size_t destiny;
+		std::size_t weight;
+	};
+
 	Graph(std::size_t ammoutVertex);
 	~Graph() = default;
 	void AddEdges(int source, int destination);
 
-	[[nodiscard]] std::vector<std::pair<int, int>> BFS(int sourceIndex);
+	[[nodiscard]] std::vector<graphEdge> BFS(int sourceIndex);
 
 
 };

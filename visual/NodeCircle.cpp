@@ -81,6 +81,9 @@ void NodeCircle::SetPosition(sf::Vector2i mousePosition)
 	circle.setPosition(sf::Vector2f(position));
 	indexText.SetPosition(position);
 
+	if (extraText.has_value())
+		extraText->SetPosition(position + sf::Vector2i(0.f, -circle.getRadius() * 1.2f));
+
 	std::erase_if(edges, [](auto& e) {return e.expired(); });
 
 	for (auto& e : edges)

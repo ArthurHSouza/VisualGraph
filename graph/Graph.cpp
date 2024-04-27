@@ -10,9 +10,9 @@ Graph::Graph(std::size_t ammoutVertex)
 	}
 }
 
-[[nodiscard]] std::vector<std::pair<int, int>> Graph::BFS(int sourceIndex)
+[[nodiscard]] std::vector<Graph::graphEdge> Graph::BFS(int sourceIndex)
 {
-	std::vector<std::pair<int, int>> ret;
+	std::vector<graphEdge> ret;
 	for (int i{}; i < adjList.size(); i++)
 	{
 		visted.push_back(Color::WHITE);
@@ -24,7 +24,7 @@ Graph::Graph(std::size_t ammoutVertex)
 	std::queue<int> Q;
 
 	Q.push(sourceIndex);
-	ret.push_back({ sourceIndex, dist[sourceIndex] });
+	
 	while (!Q.empty())
 	{
 		int u = Q.front();
@@ -37,7 +37,7 @@ Graph::Graph(std::size_t ammoutVertex)
 				visted[i] = Color::GRAY;
 				dist[i] = dist[u] + 1;
 				Q.push(i);
-				ret.push_back({ i, dist[i] });
+				ret.emplace_back( u, i, dist[i]);
 			}
 		}
 
