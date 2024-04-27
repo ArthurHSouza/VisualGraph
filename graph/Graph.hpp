@@ -1,9 +1,6 @@
 #pragma once
 #include <vector>
-#include <limits>
-#include <queue>
 #include <iostream>
-#include <tuple>
 
 class Graph
 {
@@ -30,6 +27,5 @@ public:
 	void AddEdges(int source, int destination);
 
 	[[nodiscard]] std::vector<graphEdge> BFS(int sourceIndex);
-
-
+	[[nodiscard]] std::vector<graphEdge> DFS(int sourceIndex);
 };

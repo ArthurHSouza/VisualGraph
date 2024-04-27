@@ -1,11 +1,9 @@
 #include "AssetManager.hpp"
 #include "VisualText.hpp"
-#include <iostream>
 
 VisualText::VisualText(std::string textStr, sf::Vector2f position, unsigned int charSize, sf::Color color) :
 	VisualObject((sf::Vector2i)position, charSize, color)
 {
-	std::cout << textStr;
 	text = sf::Text(
 		textStr,
 		AssetManager<sf::Font>::Get("assets/Square.ttf"),

@@ -1,5 +1,8 @@
 #include "Graph.hpp"
-
+#include <queue>
+#include <stack>
+#include <limits>
+#include <iostream>
 
 Graph::Graph(std::size_t ammoutVertex)
 {
@@ -30,7 +33,7 @@ Graph::Graph(std::size_t ammoutVertex)
 		int u = Q.front();
 		Q.pop();
 
-		for (auto& i : adjList[u])
+		for (const auto& i : adjList[u])
 		{
 			if (visted[i] == Color::WHITE)
 			{
@@ -43,6 +46,60 @@ Graph::Graph(std::size_t ammoutVertex)
 
 		visted[u] = Color::BLACK;
 	}
+	return ret;
+}
+
+std::vector<Graph::graphEdge> Graph::DFS(int sourceIndex)
+{
+	std::vector<graphEdge> ret;
+
+	std::stack<std::size_t> S;
+
+	S.push(sourceIndex);
+
+	for (int i{}; i < adjList.size(); i++)
+	{
+		visted.push_back(Color::WHITE);
+	}
+	/*
+	while (!S.empty())
+	{
+		std::size_t actual = S.top();
+		S.pop();
+		if (visted[actual] == Color::WHITE)
+		{
+			visted[actual] == Color::BLACK;
+
+			for (const auto& i : adjList[actual])
+			{
+				if (visted[i] == Color::WHITE)
+					S.push(i);
+			}
+			if(!S.empty())
+				ret.emplace_back(actual, S.top(), 0);
+		}
+	}
+	*/
+
+	visted[sourceIndex] = Color::BLACK;
+	while (!S.empty())
+	{
+		std::size_t actual = S.top();
+		S.pop();
+
+		std::cout << actual << " ";
+		for (const auto& i : adjList[actual])
+		{
+			if (visted[i] == Color::WHITE)
+			{
+				S.push(i);
+				visted[i] = Color::BLACK;
+			}
+		}
+		if(!S.empty())
+			ret.emplace_back(actual, S.top());
+	}
+
 	return ret;
 }
 

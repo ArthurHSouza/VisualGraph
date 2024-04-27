@@ -192,6 +192,27 @@ void InputManager::KeyboardInput()
 			
 		}
 	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) || sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2))
+	{
+		Graph g = Graph(nodes.size());
+		for (const auto& e : edges)
+		{
+			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
+		}
+		auto result = g.DFS(0);
+
+		for (const auto& r : result)
+		{
+			for (const auto& e : edges)
+			{
+				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny ||
+					e->GetBeginingIndex() == r.destiny && e->GetEndIndex() == r.origin)
+				{
+					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+				}
+			}
+		}
+	}
 }
 
 void InputManager::Update()
