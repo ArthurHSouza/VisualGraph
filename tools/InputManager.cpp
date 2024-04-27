@@ -177,6 +177,9 @@ void InputManager::KeyboardInput()
 		}
 		auto result = g.BFS(0);
 		
+		nodes.at(0).AddText("Source");
+		nodes.at(0).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+
 		for (const auto& r : result)
 		{
 			for (const auto& e : edges)
@@ -212,6 +215,9 @@ void InputManager::KeyboardInput()
 				}
 			}
 		}
+
+		nodes.at(0).AddText("Source");
+		nodes.at(0).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
 	}
 }
 

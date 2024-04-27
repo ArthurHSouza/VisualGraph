@@ -44,6 +44,23 @@ void NodeCircle::FillWithDefinedColor(DefinedColor color)
 	}
 }
 
+void NodeCircle::FillOutlineWithDefinedColor(DefinedColor color)
+{
+	switch (color)
+	{
+	case SelectableVisualObject::DefinedColor::DefaultColor:
+		circle.setOutlineColor(outlineColor);
+		break;
+	case SelectableVisualObject::DefinedColor::SelectedColor:
+		circle.setOutlineColor(selectedColor);
+		break;
+	case SelectableVisualObject::DefinedColor::DeleteColor:
+		circle.setOutlineColor(deleteColor);
+		break;
+	default:
+		break;
+	}
+}
 bool NodeCircle::Select(sf::Vector2i& mousePos)
 {
 	sf::Rect<float> mouseRec(sf::Vector2f(mousePos), sf::Vector2f(1, 1));
