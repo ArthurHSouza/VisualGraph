@@ -2,7 +2,7 @@
 #include <numbers>
 #include <cmath>
 
-EdgeShape::EdgeShape(int begningIndex, int endIndex, sf::Vector2i begining, sf::Vector2i end) :
+EdgeShape::EdgeShape(std::size_t begningIndex, std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end) :
 	SelectableVisualObject(begining, 10.f, sf::Color::Black, sf::Color::Blue, sf::Color::Red),
 	begningIndex{begningIndex}, endIndex{endIndex}, endPosition{end}
 {
@@ -58,7 +58,7 @@ void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChange
 	{
 		arrowRect.setPosition(sf::Vector2f(begining));
 	}
-	int difX = std::abs(end.x - begining.x);
+	std::size_t difX = std::abs(end.x - begining.x);
 	float dist = sqrtf(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
 	
 	arrowRect.setScale(1, dist / arrowRect.getSize().y);
@@ -114,12 +114,12 @@ const sf::Vector2i EdgeShape::GetEndPosition() const
 	return endPosition;
 }
 
-const int EdgeShape::GetBeginingIndex() const
+const std::size_t EdgeShape::GetBeginingIndex() const
 {
 	return begningIndex;
 }
 
-const int EdgeShape::GetEndIndex() const
+const std::size_t EdgeShape::GetEndIndex() const
 {
 	return endIndex;
 }

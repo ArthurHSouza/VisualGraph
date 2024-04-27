@@ -7,30 +7,30 @@
 Graph::Graph(std::size_t ammoutVertex)
 {
 	adjList.reserve(ammoutVertex);
-	for (int i{}; i < ammoutVertex; i++)
+	for (std::size_t i{}; i < ammoutVertex; i++)
 	{
-		adjList.emplace_back(std::vector<int>());
+		adjList.emplace_back(std::vector<std::size_t>());
 	}
 }
 
-[[nodiscard]] std::vector<GraphEdge> Graph::BFS(int sourceIndex)
+[[nodiscard]] std::vector<GraphEdge> Graph::BFS(std::size_t sourceIndex)
 {
 	std::vector<GraphEdge> ret;
-	for (int i{}; i < adjList.size(); i++)
+	for (std::size_t i{}; i < adjList.size(); i++)
 	{
 		visted.push_back(Color::WHITE);
-		dist.push_back(std::numeric_limits<int>::infinity());
+		dist.push_back(std::numeric_limits<std::size_t>::infinity());
 	}
 
 	dist[sourceIndex] = 0;
 
-	std::queue<int> Q;
+	std::queue<std::size_t> Q;
 
 	Q.push(sourceIndex);
 	
 	while (!Q.empty())
 	{
-		int u = Q.front();
+		std::size_t u = Q.front();
 		Q.pop();
 
 		for (const auto& i : adjList[u])
@@ -49,14 +49,14 @@ Graph::Graph(std::size_t ammoutVertex)
 	return ret;
 }
 
-std::vector<GraphEdge> Graph::DFS(int sourceIndex)
+std::vector<GraphEdge> Graph::DFS(std::size_t sourceIndex)
 {
 	std::vector<GraphEdge> ret;
 
-	for (int i{}; i < adjList.size(); i++)
+	for (std::size_t i{}; i < adjList.size(); i++)
 	{
 		visted.push_back(Color::WHITE);
-		dist.push_back(std::numeric_limits<int>::infinity());
+		dist.push_back(std::numeric_limits<std::size_t>::infinity());
 	}
 	
 	DFSRecursive(sourceIndex, ret);
@@ -65,7 +65,7 @@ std::vector<GraphEdge> Graph::DFS(int sourceIndex)
 }
 
 
-void Graph::DFSRecursive(int sourceIndex, std::vector<GraphEdge>& ret)
+void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret)
 {
 	visted[sourceIndex] = Color::BLACK;
 	for (const auto& adj : adjList[sourceIndex])
@@ -78,7 +78,7 @@ void Graph::DFSRecursive(int sourceIndex, std::vector<GraphEdge>& ret)
 	}
 }
 
-void Graph::AddEdges(int source, int destination)
+void Graph::AddEdges(std::size_t source, std::size_t destination)
 {
 	adjList[source].push_back(destination);
 	adjList[destination].push_back(source);

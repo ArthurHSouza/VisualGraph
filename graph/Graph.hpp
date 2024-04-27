@@ -12,21 +12,21 @@ struct GraphEdge
 class Graph
 {
 private:
-	std::vector<std::vector<int>> adjList;
+	std::vector<std::vector<std::size_t>> adjList;
 	enum class Color
 	{
 		WHITE, GRAY, BLACK
 	};
 	std::vector<Color> visted;
-	std::vector<int> dist;
+	std::vector<std::size_t> dist;
 
-	void DFSRecursive(int sourceIndex, std::vector<GraphEdge>& ret);
+	void DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret);
 public:
 
 	Graph(std::size_t ammoutVertex);
 	~Graph() = default;
-	void AddEdges(int source, int destination);
+	void AddEdges(std::size_t source, std::size_t destination);
 
-	[[nodiscard]] std::vector<GraphEdge> BFS(int sourceIndex);
-	[[nodiscard]] std::vector<GraphEdge> DFS(int sourceIndex);
+	[[nodiscard]] std::vector<GraphEdge> BFS(std::size_t sourceIndex);
+	[[nodiscard]] std::vector<GraphEdge> DFS(std::size_t sourceIndex);
 };

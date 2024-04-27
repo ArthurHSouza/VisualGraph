@@ -4,15 +4,15 @@
 class EdgeShape : public SelectableVisualObject
 {
 private:
-	const int begningIndex;
-	const int endIndex;
+	const std::size_t begningIndex;
+	const std::size_t endIndex;
 	sf::RectangleShape arrowRect;
 	sf::Vector2i endPosition;
 	sf::RectangleShape collisionPoint;
 	bool drawCollisionPoint{ false };
 
 public:
-	EdgeShape(int begningIndex,int endIndex, sf::Vector2i begining, sf::Vector2i end);
+	EdgeShape(std::size_t begningIndex,std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end);
 	~EdgeShape() = default;
 
 	void Draw(sf::RenderTarget& window) const override;
@@ -22,8 +22,8 @@ public:
 	const sf::Vector2i GetPosition() const override;
 	const sf::Vector2i GetEndPosition() const;
 
-	const int GetBeginingIndex() const;
-	const int GetEndIndex() const;
+	const std::size_t GetBeginingIndex() const;
+	const std::size_t GetEndIndex() const;
 
 	bool Select(sf::Vector2i& mousePos) override;
 };
