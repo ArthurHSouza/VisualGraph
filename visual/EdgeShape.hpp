@@ -7,9 +7,12 @@ private:
 	const std::size_t begningIndex;
 	const std::size_t endIndex;
 	sf::RectangleShape arrowRect;
+	sf::ConvexShape arrowHead;
 	sf::Vector2i endPosition;
 	sf::RectangleShape collisionPoint;
 	bool drawCollisionPoint{ false };
+
+	void UpdateArrowHead(const int& difX,const float& distance);
 
 public:
 	EdgeShape(std::size_t begningIndex,std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end);
@@ -26,4 +29,5 @@ public:
 	const std::size_t GetEndIndex() const;
 
 	bool Select(sf::Vector2i& mousePos) override;
+
 };

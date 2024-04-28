@@ -81,5 +81,4 @@ void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret)
 void Graph::AddEdges(std::size_t source, std::size_t destination)
 {
 	adjList[source].push_back(destination);
-	adjList[destination].push_back(source);
 }

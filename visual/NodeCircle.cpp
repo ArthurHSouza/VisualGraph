@@ -13,7 +13,7 @@ NodeCircle::NodeCircle(sf::Vector2i position) :
 	circle.setFillColor(defaultColor);
 	circle.setOutlineThickness(size * 0.1f);
 	circle.setOutlineColor(outlineColor);
-	circle.setOrigin(circle.getGlobalBounds().getSize() / 2.f);
+	circle.setOrigin(circle.getRadius(), circle.getRadius());
 	circle.setPosition(sf::Vector2f(position));
 }
 

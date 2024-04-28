@@ -66,6 +66,8 @@ void InputManager::MouseButtonRelease()
 {
 	isDragging = false;
 	holding = false;
+	if(timeHolding.has_value())
+		timeHolding.reset();
 	if (editMode)
 	{
 		editMode = false;
@@ -90,8 +92,6 @@ void InputManager::MouseButtonInput()
 	}
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-		selectedNodeIndex.clear();
-
 		if (deleteMode)
 		{
 			DeleteEdge();
@@ -101,17 +101,28 @@ void InputManager::MouseButtonInput()
 		{
 			if (nodes.at(i).Select(mousePosition))
 			{
+				if (std::ranges::find(selectedNodeIndex, i) != selectedNodeIndex.end())
+				{
+					continue;
+				}
 				if (deleteMode)
 				{
 					DeleteNode(i);
 				}
-				timeHolding.restart();
+				
 				selectedNodeIndex.push_back(i);
 			}
 		}
 
 		if (selectedNodeIndex.size() == 1)
 		{
+			if (!nodes.at(selectedNodeIndex.at(0)).GetIsSelected())
+			{
+				selectedNodeIndex.clear();
+				return;
+			}
+			if(!timeHolding.has_value())
+				timeHolding.emplace();
 			holding = true;
 			return;
 		}
@@ -123,6 +134,7 @@ void InputManager::MouseButtonInput()
 				nodes.at(selectedNodeIndex.back())
 			);
 			for (auto& v : nodes) v.SetAsNotSelected();
+			selectedNodeIndex.clear();
 		}
 	}
 }
@@ -184,8 +196,7 @@ void InputManager::KeyboardInput()
 		{
 			for (const auto& e : edges)
 			{
-				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny || 
-					e->GetBeginingIndex() == r.destiny && e->GetEndIndex() == r.origin)
+				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny)
 				{
 					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
 				}
@@ -195,7 +206,7 @@ void InputManager::KeyboardInput()
 			
 		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2) || sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
 	{
 		Graph g = Graph(nodes.size());
 		for (const auto& e : edges)
@@ -208,8 +219,7 @@ void InputManager::KeyboardInput()
 		{
 			for (const auto& e : edges)
 			{
-				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny ||
-					e->GetBeginingIndex() == r.destiny && e->GetEndIndex() == r.origin)
+				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny)
 				{
 					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
 				}
@@ -261,7 +271,7 @@ void InputManager::Update()
 		}
 	}
 
-	if (holding && !deleteMode && timeHolding.getElapsedTime().asSeconds() > timeToEdit)
+	if (holding && !deleteMode && timeHolding.has_value() && timeHolding->getElapsedTime().asSeconds() > timeToEdit)
 	{
 		editMode = true;
 		nodes.at(selectedNodeIndex.front()).SetPosition(mousePosition);

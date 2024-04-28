@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <optional>
 #include <memory>
 #include <forward_list>
 #include <algorithm>
@@ -16,7 +17,7 @@ private:
 	std::vector<NodeCircle>& nodes;
 	std::forward_list<std::shared_ptr<EdgeShape>>& edges;
 	Camera& cam;
-	sf::Clock timeHolding;
+	std::optional<sf::Clock> timeHolding;
 
 	bool holding{ false };
 	bool editMode{ false };
