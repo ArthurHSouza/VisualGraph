@@ -24,6 +24,12 @@ void VisualText::SetPosition(sf::Vector2i position)
 {
 	text.setPosition((sf::Vector2f)position);
 }
+
+void VisualText::SetRotation(float rotation)
+{
+	text.setRotation(rotation);
+}
+
 void VisualText::SetColor(sf::Color color)
 {
 	text.setColor(color);

@@ -77,7 +77,7 @@ void EdgeShape::UpdateArrowHead(const int& difX, const float& distance)
 			distanceOtherPoints * sinf(rotationRadians - offsetAngle)
 		);
 	}
-	else if (endPosition.x < position.x && endPosition.y < position.y)
+	else if (endPosition.x <= position.x && endPosition.y <= position.y)
 	{
 		rotationRadians = std::numbers::pi_v<float> / 2.f + rotationRadians;
 		offset1ArrowHead = sf::Vector2f(
@@ -95,7 +95,7 @@ void EdgeShape::UpdateArrowHead(const int& difX, const float& distance)
 			distanceOtherPoints * sinf(rotationRadians - offsetAngle)
 		);
 	}
-	else if (endPosition.x < position.x && endPosition.y > position.y)
+	else if (endPosition.x <= position.x && endPosition.y >= position.y)
 	{
 		rotationRadians = fabs(std::numbers::pi_v<float> / 2.f - rotationRadians);
 		offset1ArrowHead = sf::Vector2f(
@@ -113,7 +113,7 @@ void EdgeShape::UpdateArrowHead(const int& difX, const float& distance)
 			-distanceOtherPoints * sinf(rotationRadians - offsetAngle)
 		);
 	}
-	else if (endPosition.x > position.x && endPosition.y > position.y)
+	else if (endPosition.x >= position.x && endPosition.y >= position.y)
 	{
 		offset1ArrowHead = sf::Vector2f(
 			-50.f * sinf(rotationRadians),
@@ -141,44 +141,54 @@ void EdgeShape::UpdateWeightText()
 	int difX = std::abs(endPosition.x - collisionPoint.getPosition().x);
 	float dist = std::sqrtf(std::pow<int>(difX, 2) + std::pow<int>(endPosition.y - collisionPoint.getPosition().y, 2));
 	float rotationRadians = asinf(difX / dist) + std::numbers::pi_v<float> / 20.f;
-
+	float rotationDegrees = asinf(difX / dist) * 180.f / std::numbers::pi_v<float>;
 	sf::Vector2f textPosition;
 
 	if (endPosition.x >= position.x && endPosition.y <= position.y)
 	{
-		rotationRadians = fabs(std::numbers::pi_v<float> / 2.f - rotationRadians);
+		std::cout << "antes " << rotationRadians * 180.f / std::numbers::pi_v<float> << "\n";
+		rotationRadians = fabs(std::numbers::pi_v<float> / 2 - rotationRadians);
+	//	rotationRadians = test;
 		textPosition = sf::Vector2f(
 			-dist * cosf(rotationRadians),
 			dist * sinf(rotationRadians)
 		);
-
+		rotationDegrees -= 90.f;
+		std::cout << "Depois " << rotationRadians * 180.f / std::numbers::pi_v<float> << "\n";
 	}
-	else if (endPosition.x < position.x && endPosition.y < position.y)
+	else if (endPosition.x <= position.x && endPosition.y <= position.y)
 	{
 		rotationRadians = std::numbers::pi_v<float> / 2.f + rotationRadians;
 		textPosition = sf::Vector2f(
 			-dist * cosf(rotationRadians),
 			dist * sinf(rotationRadians)
 		);
-
+		rotationDegrees += 180.f;
+		rotationDegrees = abs(rotationDegrees + 90 - 180);
 	}
-	else if (endPosition.x < position.x && endPosition.y > position.y)
+	else if (endPosition.x <= position.x && endPosition.y >= position.y)
 	{
+		rotationRadians = asinf(difX / dist) - std::numbers::pi_v<float> / 20.f;
 		rotationRadians = fabs(std::numbers::pi_v<float> / 2.f - rotationRadians);
 		textPosition = sf::Vector2f(
 			dist * cosf(rotationRadians),
 			-dist * sinf(rotationRadians)
 		);
+		rotationDegrees -= 90.f;
 	}
-	else if (endPosition.x > position.x && endPosition.y > position.y)
+	else if (endPosition.x >= position.x && endPosition.y >= position.y)
 	{
+		rotationRadians = asinf(difX / dist) - std::numbers::pi_v<float> / 20.f;
 		textPosition = sf::Vector2f(
 			-dist * sinf(rotationRadians),
 			-dist * cosf(rotationRadians)
 		);
+		rotationDegrees = abs(rotationDegrees + 90 - 180);
 	}
-
+	std::cout << dist << " endPos " << endPosition.x << " " << endPosition.y << " textPosition " << textPosition.x << " " << textPosition.y << "\n";
 	weightText.SetPosition( endPosition + (sf::Vector2i)textPosition);
+	
+	//weightText.SetRotation(rotationDegrees);
 }
 
 void EdgeShape::Draw(sf::RenderTarget& window) const

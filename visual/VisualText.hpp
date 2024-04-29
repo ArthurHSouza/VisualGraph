@@ -19,6 +19,7 @@ public:
 
 	void Draw(sf::RenderTarget& window) const;
 	void SetPosition(sf::Vector2i position);
+	void SetRotation(float rotation);
 	void SetColor(sf::Color);
 	const sf::Vector2i GetPosition() const override;
 };

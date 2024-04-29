@@ -1,7 +1,7 @@
 #pragma once
 #include "SelectableVisualObject.hpp"
 #include "VisualText.hpp"
-
+#include <iostream>
 class EdgeShape : public SelectableVisualObject
 {
 private:
@@ -14,7 +14,7 @@ private:
 	sf::Vector2i endPosition;
 	sf::RectangleShape collisionPoint;
 	bool drawCollisionPoint{ false };
-
+	float test{};
 	void UpdateArrowHead(const int& difX,const float& distance);
 	void UpdateWeightText();
 
@@ -33,5 +33,13 @@ public:
 	const std::size_t GetEndIndex() const;
 	const float GetWeight() const;
 	bool Select(sf::Vector2i& mousePos) override;
-
+	void Test(bool up)
+	{
+		if (up)
+			test += 5.f;
+		else
+			test -= 5.f;
+		UpdateWeightText();
+		std::cout << "teste " << test << "\n";
+	}
 };
