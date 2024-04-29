@@ -21,6 +21,7 @@ private:
 	std::vector<std::size_t> dist;
 
 	void DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret);
+	bool DFSRecursiveVerifyCicle(std::size_t sourceIndex);
 public:
 
 	Graph(std::size_t ammoutVertex);
@@ -29,4 +30,5 @@ public:
 
 	[[nodiscard]] std::vector<GraphEdge> BFS(std::size_t sourceIndex);
 	[[nodiscard]] std::vector<GraphEdge> DFS(std::size_t sourceIndex);
+	[[nodiscard]] bool HaveCycle();
 };

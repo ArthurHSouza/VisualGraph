@@ -64,6 +64,21 @@ std::vector<GraphEdge> Graph::DFS(std::size_t sourceIndex)
 	return ret;
 }
 
+bool Graph::HaveCycle()
+{
+	for (std::size_t i{}; i < adjList.size(); i++)
+	{
+		visted.push_back(Color::WHITE);
+	}
+	for (std::size_t i{}; i < adjList.size(); i++)
+	{
+		if(DFSRecursiveVerifyCicle(i))
+			return true;
+		for (auto& v : visted) v = Color::WHITE;
+	}
+	return false;
+}
+
 
 void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret)
 {
@@ -76,6 +91,23 @@ void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret)
 			DFSRecursive(adj, ret);
 		}
 	}
+}
+
+bool Graph::DFSRecursiveVerifyCicle(std::size_t sourceIndex)
+{
+	visted[sourceIndex] = Color::BLACK;
+	for (const auto& adj : adjList[sourceIndex])
+	{
+		if (visted[adj] == Color::WHITE)
+		{
+			return DFSRecursiveVerifyCicle(adj);
+		}
+		else
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void Graph::AddEdges(std::size_t source, std::size_t destination)

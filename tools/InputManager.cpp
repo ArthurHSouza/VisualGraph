@@ -229,6 +229,15 @@ void InputManager::KeyboardInput()
 		nodes.at(0).AddText("Source");
 		nodes.at(0).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
 	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+	{
+		Graph g = Graph(nodes.size());
+		for (const auto& e : edges)
+		{
+			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
+		}
+		std::cout << "Have Cycle? " << g.HaveCycle();
+	}
 }
 
 void InputManager::Update()
