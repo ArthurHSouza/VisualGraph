@@ -24,6 +24,10 @@ void VisualText::SetPosition(sf::Vector2i position)
 {
 	text.setPosition((sf::Vector2f)position);
 }
+void VisualText::SetColor(sf::Color color)
+{
+	text.setColor(color);
+}
 
 const sf::Vector2i VisualText::GetPosition() const
 {

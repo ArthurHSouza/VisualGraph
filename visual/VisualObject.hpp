@@ -1,6 +1,21 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+struct ColorPallet
+{
+	static sf::Color darkBlue;
+	static sf::Color petrolBlue;
+	static sf::Color turquoiseBlue; 
+	static sf::Color ceruleanBlue;
+	static sf::Color celestBlue;
+	static sf::Color darkGreen;
+	static sf::Color forestGreen;
+	static sf::Color darkGray;
+	static sf::Color burgundy;
+	static sf::Color carminRed;
+	static sf::Color wineRed;
+};
+
 class VisualObject
 {
 protected:

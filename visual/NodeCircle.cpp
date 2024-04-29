@@ -6,8 +6,8 @@
 size_t NodeCircle::count = 0;
 
 NodeCircle::NodeCircle(sf::Vector2i position) :
-	SelectableVisualObject(position, 50.f, sf::Color::White, sf::Color::Blue, sf::Color::Red), outlineColor{ sf::Color::Black }, 
-	indexText(std::to_string(count), (sf::Vector2f)position), index{ count++ }
+	SelectableVisualObject(position, 50.f, sf::Color::White, ColorPallet::celestBlue, ColorPallet::carminRed), 
+	outlineColor{ sf::Color::Black }, indexText(std::to_string(count), (sf::Vector2f)position), index{ count++ }
 {
 	circle.setRadius(size);
 	circle.setFillColor(defaultColor);
@@ -99,7 +99,7 @@ void NodeCircle::SetPosition(sf::Vector2i mousePosition)
 	indexText.SetPosition(position);
 
 	if (extraText.has_value())
-		extraText->SetPosition(position + sf::Vector2i(0.f, -circle.getRadius() * 1.2f));
+		extraText->SetPosition(position + (sf::Vector2i)sf::Vector2f(0.f, (-circle.getRadius() - circle.getOutlineThickness()) * 1.4f));
 
 	std::erase_if(edges, [](auto& e) {return e.expired(); });
 
@@ -124,7 +124,8 @@ void NodeCircle::InsertEdge(std::weak_ptr<EdgeShape> edge)
 
 void NodeCircle::AddText(std::string text)
 {
-	extraText.emplace(text, (sf::Vector2f)position + sf::Vector2f(0.f, -circle.getRadius() * 1.2f), 30, sf::Color::Green);
+	extraText.emplace(text, (sf::Vector2f)position + sf::Vector2f(0.f, (-circle.getRadius() - circle.getOutlineThickness()) * 1.4f),
+		30, ColorPallet::ceruleanBlue);
 }
 
 std::vector<std::shared_ptr<EdgeShape>> NodeCircle::GetLinkedEdges()

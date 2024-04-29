@@ -4,9 +4,11 @@
 #include <iostream>
 
 EdgeShape::EdgeShape(std::size_t begningIndex, std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end) :
-	SelectableVisualObject(begining, 10.f, sf::Color::Black, sf::Color::Blue, sf::Color::Red),
-	begningIndex{begningIndex}, endIndex{endIndex}, endPosition{end}
+	SelectableVisualObject(begining, 10.f, sf::Color::Black, ColorPallet::celestBlue, ColorPallet::carminRed),
+	begningIndex{begningIndex}, endIndex{endIndex}, endPosition{end}, weightText(std::to_string(weight).substr(0,5))
 {
+	weightText.SetColor(ColorPallet::petrolBlue);
+
 	collisionPoint.setSize(sf::Vector2f(20.f,20.f));
 	collisionPoint.setOrigin(collisionPoint.getGlobalBounds().getSize() / 2.f);
 	collisionPoint.setFillColor(deleteColor);
@@ -45,6 +47,7 @@ EdgeShape::EdgeShape(std::size_t begningIndex, std::size_t endIndex, sf::Vector2
 	arrowHead.setPointCount(3);
 	arrowHead.setFillColor(defaultColor);
 	UpdateArrowHead(difX, dist);
+	UpdateWeightText();
 
 }
 
@@ -133,12 +136,58 @@ void EdgeShape::UpdateArrowHead(const int& difX, const float& distance)
 	arrowHead.setPoint(2, (sf::Vector2f)endPosition + offset3ArrowHead);
 }
 
+void EdgeShape::UpdateWeightText()
+{
+	int difX = std::abs(endPosition.x - collisionPoint.getPosition().x);
+	float dist = std::sqrtf(std::pow<int>(difX, 2) + std::pow<int>(endPosition.y - collisionPoint.getPosition().y, 2));
+	float rotationRadians = asinf(difX / dist) + std::numbers::pi_v<float> / 20.f;
+
+	sf::Vector2f textPosition;
+
+	if (endPosition.x >= position.x && endPosition.y <= position.y)
+	{
+		rotationRadians = fabs(std::numbers::pi_v<float> / 2.f - rotationRadians);
+		textPosition = sf::Vector2f(
+			-dist * cosf(rotationRadians),
+			dist * sinf(rotationRadians)
+		);
+
+	}
+	else if (endPosition.x < position.x && endPosition.y < position.y)
+	{
+		rotationRadians = std::numbers::pi_v<float> / 2.f + rotationRadians;
+		textPosition = sf::Vector2f(
+			-dist * cosf(rotationRadians),
+			dist * sinf(rotationRadians)
+		);
+
+	}
+	else if (endPosition.x < position.x && endPosition.y > position.y)
+	{
+		rotationRadians = fabs(std::numbers::pi_v<float> / 2.f - rotationRadians);
+		textPosition = sf::Vector2f(
+			dist * cosf(rotationRadians),
+			-dist * sinf(rotationRadians)
+		);
+	}
+	else if (endPosition.x > position.x && endPosition.y > position.y)
+	{
+		textPosition = sf::Vector2f(
+			-dist * sinf(rotationRadians),
+			-dist * cosf(rotationRadians)
+		);
+	}
+
+	weightText.SetPosition( endPosition + (sf::Vector2i)textPosition);
+}
+
 void EdgeShape::Draw(sf::RenderTarget& window) const
 {
 	window.draw(arrowRect);
 	if(drawCollisionPoint)
 		window.draw(collisionPoint);
 	window.draw(arrowHead);
+	weightText.Draw(window);
 }
 
 void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChangePosition)
@@ -174,6 +223,7 @@ void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChange
 	collisionPoint.setPosition(targetX, targetY);
 
 	UpdateArrowHead(difX, dist);
+	UpdateWeightText();
 }
 
 void EdgeShape::FillWithDefinedColor(DefinedColor color)
@@ -217,6 +267,11 @@ const std::size_t EdgeShape::GetBeginingIndex() const
 const std::size_t EdgeShape::GetEndIndex() const
 {
 	return endIndex;
+}
+
+const float EdgeShape::GetWeight() const
+{
+	return weight;
 }
 
 bool EdgeShape::Select(sf::Vector2i& mousePos)
