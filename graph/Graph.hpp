@@ -23,7 +23,7 @@ private:
 
 	void DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret);
 	bool DFSRecursiveVerifyCicle(std::size_t sourceIndex);
-	void DFSTopologicalSort(std::size_t sourceIndex, std::stack<GraphEdge>& ret);
+	void DFSTopologicalSort(std::size_t sourceIndex, std::stack<std::size_t>& ret);
 public:
 
 	Graph(std::size_t ammoutVertex);
@@ -35,5 +35,5 @@ public:
 	[[nodiscard]] bool HaveCycle();
 	//If the stack returned is empty that mean that the graph have a cycle
 	//so in that way is impossible to apply the Topological Sort algorithm
-	[[nodiscard]] std::stack<GraphEdge> TopologicalSort();
+	[[nodiscard]] std::stack<std::size_t> TopologicalSort();
 };

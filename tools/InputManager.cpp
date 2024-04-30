@@ -258,7 +258,7 @@ void InputManager::KeyboardInput()
 					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
 				}
 			}*/
-			std::cout << result.top().origin << "->";
+			std::cout << result.top() << "->";
 			result.pop();
 		}
 		std::cout << "\n";
