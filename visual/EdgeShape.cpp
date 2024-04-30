@@ -13,8 +13,8 @@ EdgeShape::EdgeShape(std::size_t begningIndex, std::size_t endIndex, sf::Vector2
 	collisionPoint.setOrigin(collisionPoint.getGlobalBounds().getSize() / 2.f);
 	collisionPoint.setFillColor(deleteColor);
 
-	int difX = std::abs(end.x - begining.x);
-	float dist = std::sqrtf(std::pow<int>(difX, 2) + std::pow<int>(end.y - begining.y, 2));
+	int diffy = position.y - end.y;
+	float dist = sqrtf(std::pow(position.x - end.x, 2) + std::pow(diffy, 2));
 
 	arrowRect.setSize(sf::Vector2f(size,dist));
 	arrowRect.setOrigin(
@@ -24,18 +24,17 @@ EdgeShape::EdgeShape(std::size_t begningIndex, std::size_t endIndex, sf::Vector2
 	arrowRect.setPosition(sf::Vector2f(begining));
 	arrowRect.setFillColor(defaultColor);
 
-	float rotationDegrees = asinf(difX / dist) * 180.f/std::numbers::pi_v<float>;
-	if (end.y < begining.y && end.x < begining.x)
+	float rotationDegrees = asinf(diffy / dist) * 180.f / std::numbers::pi_v<float>;
+
+	// First quadrant or Fourth quadrant
+	if ((endPosition.x >= position.x && endPosition.y <= position.y) || (endPosition.x >= position.x && endPosition.y >= position.y))
 	{
-		rotationDegrees *= -1;
+		rotationDegrees = 90 - rotationDegrees;
 	}
-	else if (end.y > begining.y && end.x < begining.x)
+	//Second quadrant or Third quadrant
+	else if ((endPosition.x <= position.x && endPosition.y <= position.y) || (endPosition.x <= position.x && endPosition.y >= position.y))
 	{
-		rotationDegrees -= 180;
-	}
-	else if (end.y > begining.y && end.x > begining.x)
-	{
-		rotationDegrees = 180 - rotationDegrees;
+		rotationDegrees -= 90;
 	}
 	
 	arrowRect.setRotation(rotationDegrees);
@@ -46,25 +45,26 @@ EdgeShape::EdgeShape(std::size_t begningIndex, std::size_t endIndex, sf::Vector2
 
 	arrowHead.setPointCount(3);
 	arrowHead.setFillColor(defaultColor);
-	UpdateArrowHead(difX, dist);
+	UpdateArrowHead(diffy, dist);
 	UpdateWeightText();
 
 }
 
-void EdgeShape::UpdateArrowHead(const int& difX, const float& distance)
+void EdgeShape::UpdateArrowHead(const int& diffY, const float& distance)
 {
-	float rotationRadians = asinf(difX / distance);
+	float rotationRadians = asinf(diffY / distance);
 	sf::Vector2f offset1ArrowHead;
 	sf::Vector2f offset2ArrowHead;
 	sf::Vector2f offset3ArrowHead;
 	const float distanceOtherPoints = 75.f;
 	const float offsetAngle = std::numbers::pi_v<float> / 10.f;
+	const float nodeRadius = 50.f;
+	//First quadrant
 	if (endPosition.x >= position.x && endPosition.y <= position.y)
 	{
-		rotationRadians = fabs(std::numbers::pi_v<float> / 2.f - rotationRadians);
 		offset1ArrowHead = sf::Vector2f(
-			-50.f * cosf(rotationRadians),
-			50.f * sinf(rotationRadians)
+			-nodeRadius * cosf(rotationRadians),
+			nodeRadius * sinf(rotationRadians)
 		);
 
 		offset2ArrowHead = sf::Vector2f(
@@ -77,12 +77,15 @@ void EdgeShape::UpdateArrowHead(const int& difX, const float& distance)
 			distanceOtherPoints * sinf(rotationRadians - offsetAngle)
 		);
 	}
+
 	else if (endPosition.x <= position.x && endPosition.y <= position.y)
 	{
-		rotationRadians = std::numbers::pi_v<float> / 2.f + rotationRadians;
+		//Adjusting the angle, rotationRadians at the moment is like the angle was started at pi
+		//so we make this subtraction so we can get the angle started from 0
+		rotationRadians = std::numbers::pi_v<float> - rotationRadians;
 		offset1ArrowHead = sf::Vector2f(
-			-50.f * cosf(rotationRadians),
-			50.f * sinf(rotationRadians)
+			-nodeRadius * cosf(rotationRadians),
+			nodeRadius * sinf(rotationRadians)
 		);
 
 		offset2ArrowHead = sf::Vector2f(
@@ -95,39 +98,45 @@ void EdgeShape::UpdateArrowHead(const int& difX, const float& distance)
 			distanceOtherPoints * sinf(rotationRadians - offsetAngle)
 		);
 	}
+	
 	else if (endPosition.x <= position.x && endPosition.y >= position.y)
 	{
-		rotationRadians = fabs(std::numbers::pi_v<float> / 2.f - rotationRadians);
+		//Adjusting the angle, rotationRadians at the moment is like the angle was started at pi and going clockwise
+		//so is a negative value, we make this sum so we can get the angle started from 0 counter-clockwise
+		rotationRadians = std::numbers::pi_v<float> +fabs(rotationRadians);
 		offset1ArrowHead = sf::Vector2f(
-			50.f * cosf(rotationRadians),
-			-50.f * sinf(rotationRadians)
+			-nodeRadius * cosf(rotationRadians),
+			nodeRadius * sinf(rotationRadians)
 		);
 
 		offset2ArrowHead = sf::Vector2f(
-			distanceOtherPoints * cosf(rotationRadians + offsetAngle),
-			-distanceOtherPoints * sinf(rotationRadians + offsetAngle)
+			-distanceOtherPoints * cosf(rotationRadians + offsetAngle),
+			distanceOtherPoints * sinf(rotationRadians + offsetAngle)
 		);
 
 		offset3ArrowHead = sf::Vector2f(
-			distanceOtherPoints * cosf(rotationRadians - offsetAngle),
-			-distanceOtherPoints * sinf(rotationRadians - offsetAngle)
+			-distanceOtherPoints * cosf(rotationRadians - offsetAngle),
+			distanceOtherPoints * sinf(rotationRadians - offsetAngle)
 		);
 	}
 	else if (endPosition.x >= position.x && endPosition.y >= position.y)
 	{
+		//Adjusting the angle, rotationRadians at the moment is like the angle was started at 0 and going clockwise
+		//so is a negative value, we make this subtraction so we can get the angle started from 0 and going counter-clockwise
+		rotationRadians = 2.f * std::numbers::pi_v<float>+rotationRadians;
 		offset1ArrowHead = sf::Vector2f(
-			-50.f * sinf(rotationRadians),
-			-50.f * cosf(rotationRadians)
+			-nodeRadius * cosf(rotationRadians),
+			nodeRadius * sinf(rotationRadians)
 		);
 
 		offset2ArrowHead = sf::Vector2f(
-			-distanceOtherPoints * sinf(rotationRadians + offsetAngle),
-			-distanceOtherPoints * cosf(rotationRadians + offsetAngle)
+			-distanceOtherPoints * cosf(rotationRadians + offsetAngle),
+			distanceOtherPoints * sinf(rotationRadians + offsetAngle)
 		);
 
 		offset3ArrowHead = sf::Vector2f(
-			-distanceOtherPoints * sinf(rotationRadians - offsetAngle),
-			-distanceOtherPoints * cosf(rotationRadians - offsetAngle)
+			-distanceOtherPoints * cosf(rotationRadians - offsetAngle),
+			distanceOtherPoints * sinf(rotationRadians - offsetAngle)
 		);
 	}
 
@@ -146,7 +155,6 @@ void EdgeShape::UpdateWeightText()
 
 	sf::Vector2f textPosition;
 	float textRotation = asinf(diffY / dist) * 180.f / std::numbers::pi_v<float>;
-	std::cout << textAngle * 180.f/std::numbers::pi_v<float><< std::endl;
 
 	//First quadrant
 	if (endPosition.x >= position.x && endPosition.y <= position.y)
@@ -215,31 +223,31 @@ void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChange
 	{
 		arrowRect.setPosition(sf::Vector2f(begining));
 	}
-	std::size_t difX = std::abs(end.x - begining.x);
-	float dist = sqrtf(std::pow(difX, 2) + std::pow(end.y - begining.y, 2));
+	int diffy = position.y - end.y ;
+	float dist = sqrtf(std::pow(position.x - end.x, 2) + std::pow(diffy, 2));
 	
 	arrowRect.setScale(1, dist / arrowRect.getSize().y);
 
-	float rotationDegrees = asinf(difX / dist) * 180.f / std::numbers::pi_v<float>;
-	if (end.y <= begining.y && end.x < begining.x)
+	float rotationDegrees = asinf(diffy / dist) * 180.f / std::numbers::pi_v<float>;
+
+	// First quadrant or Fourth quadrant
+	if ((endPosition.x >= position.x && endPosition.y <= position.y) || (endPosition.x >= position.x && endPosition.y >= position.y))
 	{
-		rotationDegrees *= -1;
+		rotationDegrees = 90 - rotationDegrees;
 	}
-	else if (end.y > begining.y && end.x <= begining.x)
+	//Second quadrant or Third quadrant
+	else if ((endPosition.x <= position.x && endPosition.y <= position.y) || (endPosition.x <= position.x && endPosition.y >= position.y))
 	{
-		rotationDegrees -= 180;
+		rotationDegrees -= 90;
 	}
-	else if (end.y > begining.y && end.x > begining.x)
-	{
-		rotationDegrees = 180 - rotationDegrees;
-	}
+
 	arrowRect.setRotation(rotationDegrees);
 
 	float targetX = std::lerp(position.x, endPosition.x, 0.5f);
 	float targetY = std::lerp(position.y, endPosition.y, 0.5f);
 	collisionPoint.setPosition(targetX, targetY);
 
-	UpdateArrowHead(difX, dist);
+	UpdateArrowHead(diffy, dist);
 	UpdateWeightText();
 }
 

@@ -238,15 +238,6 @@ void InputManager::KeyboardInput()
 		}
 		std::cout << "Have Cycle? " << g.HaveCycle();
 	}
-
-
-
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad8))
-	{
-		edges.front()->Test(true);
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad2))
-		edges.front()->Test(false);
 }
 
 void InputManager::Update()

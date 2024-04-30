@@ -14,8 +14,7 @@ private:
 	sf::Vector2i endPosition;
 	sf::RectangleShape collisionPoint;
 	bool drawCollisionPoint{ false };
-	float test{};
-	void UpdateArrowHead(const int& difX,const float& distance);
+	void UpdateArrowHead(const int& diffY,const float& distance);
 	void UpdateWeightText();
 
 public:
@@ -33,13 +32,4 @@ public:
 	const std::size_t GetEndIndex() const;
 	const float GetWeight() const;
 	bool Select(sf::Vector2i& mousePos) override;
-	void Test(bool up)
-	{
-		if (up)
-			test += 5.f;
-		else
-			test -= 5.f;
-		UpdateWeightText();
-		std::cout << "teste " << test << "\n";
-	}
 };
