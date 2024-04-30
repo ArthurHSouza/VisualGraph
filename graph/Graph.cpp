@@ -79,6 +79,26 @@ bool Graph::HaveCycle()
 	return false;
 }
 
+std::stack<GraphEdge> Graph::TopologicalSort()
+{
+	std::stack<GraphEdge> ret;
+
+	if (HaveCycle()) 
+		return ret;
+	for (std::size_t i{}; i < adjList.size(); i++)
+	{
+		visted.push_back(Color::WHITE);
+	}
+	for (std::size_t i{}; i < adjList.size(); i++)
+	{
+		if (visted[i] == Color::WHITE)
+		{
+			DFSTopologicalSort(i, ret);
+		}
+	}
+	return ret;
+}
+
 
 void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret)
 {
@@ -108,6 +128,21 @@ bool Graph::DFSRecursiveVerifyCicle(std::size_t sourceIndex)
 		}
 	}
 	return false;
+}
+
+void Graph::DFSTopologicalSort(std::size_t sourceIndex, std::stack<GraphEdge>& ret)
+{
+	visted[sourceIndex] = Color::BLACK;
+	std::size_t i{};
+	for (const auto& adj : adjList[sourceIndex])
+	{
+		if (visted[adj] == Color::WHITE)
+		{
+			i = adj;
+			DFSTopologicalSort(adj, ret);
+		}
+	}
+	ret.push({ sourceIndex, 0, 0 });
 }
 
 void Graph::AddEdges(std::size_t source, std::size_t destination)

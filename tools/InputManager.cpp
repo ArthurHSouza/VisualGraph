@@ -1,5 +1,6 @@
 #include "InputManager.hpp"
 #include "Graph.hpp"
+#include <stack>
 
 InputManager::InputManager(sf::RenderWindow& window, Camera& cam, std::vector<NodeCircle>& nodes, std::forward_list<std::shared_ptr<EdgeShape>>& edges) :
 	window{ window }, cam{ cam }, nodes{ nodes }, edges{ edges }
@@ -237,6 +238,30 @@ void InputManager::KeyboardInput()
 			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
 		}
 		std::cout << "Have Cycle? " << g.HaveCycle();
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
+	{
+		Graph g = Graph(nodes.size());
+		for (const auto& e : edges)
+		{
+			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
+		}
+		auto result = g.TopologicalSort();
+
+		for (std::size_t i = result.size(); i > 0; i--)
+		{
+		/*	for (const auto& e : edges)
+			{
+				if (e->GetBeginingIndex() == result.top().origin && e->GetEndIndex() == result.top().destiny)
+				{
+					std::cout << result.top().destiny << " -> ";
+					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+				}
+			}*/
+			std::cout << result.top().origin << "->";
+			result.pop();
+		}
+		std::cout << "\n";
 	}
 }
 

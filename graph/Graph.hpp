@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <stack>
 #include <iostream>
 
 struct GraphEdge
@@ -22,6 +23,7 @@ private:
 
 	void DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret);
 	bool DFSRecursiveVerifyCicle(std::size_t sourceIndex);
+	void DFSTopologicalSort(std::size_t sourceIndex, std::stack<GraphEdge>& ret);
 public:
 
 	Graph(std::size_t ammoutVertex);
@@ -31,4 +33,7 @@ public:
 	[[nodiscard]] std::vector<GraphEdge> BFS(std::size_t sourceIndex);
 	[[nodiscard]] std::vector<GraphEdge> DFS(std::size_t sourceIndex);
 	[[nodiscard]] bool HaveCycle();
+	//If the stack returned is empty that mean that the graph have a cycle
+	//so in that way is impossible to apply the Topological Sort algorithm
+	[[nodiscard]] std::stack<GraphEdge> TopologicalSort();
 };
