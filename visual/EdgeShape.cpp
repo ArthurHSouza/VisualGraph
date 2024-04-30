@@ -138,57 +138,64 @@ void EdgeShape::UpdateArrowHead(const int& difX, const float& distance)
 
 void EdgeShape::UpdateWeightText()
 {
-	int difX = std::abs(endPosition.x - collisionPoint.getPosition().x);
-	float dist = std::sqrtf(std::pow<int>(difX, 2) + std::pow<int>(endPosition.y - collisionPoint.getPosition().y, 2));
-	float rotationRadians = asinf(difX / dist) + std::numbers::pi_v<float> / 20.f;
-	float rotationDegrees = asinf(difX / dist) * 180.f / std::numbers::pi_v<float>;
-	sf::Vector2f textPosition;
+	const float offsetAngle = std::numbers::pi_v<float> / 20.f;
 
+	int diffY = (position.y - collisionPoint.getPosition().y);
+	float dist = std::sqrtf(std::pow<int>(position.x - collisionPoint.getPosition().x, 2) + std::pow<int>(diffY, 2));
+	float textAngle = asinf(diffY / dist);
+
+	sf::Vector2f textPosition;
+	float textRotation = asinf(diffY / dist) * 180.f / std::numbers::pi_v<float>;
+	std::cout << textAngle * 180.f/std::numbers::pi_v<float><< std::endl;
+
+	//First quadrant
 	if (endPosition.x >= position.x && endPosition.y <= position.y)
 	{
-		std::cout << "antes " << rotationRadians * 180.f / std::numbers::pi_v<float> << "\n";
-		rotationRadians = fabs(std::numbers::pi_v<float> / 2 - rotationRadians);
-	//	rotationRadians = test;
+		//Adjusting the angle
+		textAngle -= offsetAngle;
 		textPosition = sf::Vector2f(
-			-dist * cosf(rotationRadians),
-			dist * sinf(rotationRadians)
+			-dist * cosf(textAngle),
+			dist * sinf(textAngle)
 		);
-		rotationDegrees -= 90.f;
-		std::cout << "Depois " << rotationRadians * 180.f / std::numbers::pi_v<float> << "\n";
+		textRotation = 360.f - textRotation;
 	}
+	//Second quadrant 
 	else if (endPosition.x <= position.x && endPosition.y <= position.y)
 	{
-		rotationRadians = std::numbers::pi_v<float> / 2.f + rotationRadians;
+		//Adjusting the angle, textAngle at the moment is like the angle was started at pi
+		//so we make this subtraction so we can get the angle started from 0
+		textAngle = std::numbers::pi_v<float> - textAngle + offsetAngle;
 		textPosition = sf::Vector2f(
-			-dist * cosf(rotationRadians),
-			dist * sinf(rotationRadians)
+			-dist * cosf(textAngle),
+			dist * sinf(textAngle)
 		);
-		rotationDegrees += 180.f;
-		rotationDegrees = abs(rotationDegrees + 90 - 180);
 	}
+	//Third quadrant
 	else if (endPosition.x <= position.x && endPosition.y >= position.y)
 	{
-		rotationRadians = asinf(difX / dist) - std::numbers::pi_v<float> / 20.f;
-		rotationRadians = fabs(std::numbers::pi_v<float> / 2.f - rotationRadians);
+		//Adjusting the angle, textAngle at the moment is like the angle was started at pi and going clockwise
+		//so is a negative value, we make this sum so we can get the angle started from 0 counter-clockwise
+		textAngle = std::numbers::pi_v<float> +fabs(textAngle) + offsetAngle;
 		textPosition = sf::Vector2f(
-			dist * cosf(rotationRadians),
-			-dist * sinf(rotationRadians)
+			-dist * cosf(textAngle),
+			dist * sinf(textAngle)
 		);
-		rotationDegrees -= 90.f;
 	}
+	//Fourth quadrant
 	else if (endPosition.x >= position.x && endPosition.y >= position.y)
 	{
-		rotationRadians = asinf(difX / dist) - std::numbers::pi_v<float> / 20.f;
+		//Adjusting the angle, textAngle at the moment is like the angle was started at 0 and going clockwise
+		//so is a negative value, we make this subtraction so we can get the angle started from 0 and going counter-clockwise
+		textAngle =  2.f * std::numbers::pi_v<float>+textAngle - offsetAngle;
 		textPosition = sf::Vector2f(
-			-dist * sinf(rotationRadians),
-			-dist * cosf(rotationRadians)
+			-dist * cosf(textAngle),
+			dist * sinf(textAngle)
 		);
-		rotationDegrees = abs(rotationDegrees + 90 - 180);
+		textRotation = 360 - textRotation;
 	}
-	std::cout << dist << " endPos " << endPosition.x << " " << endPosition.y << " textPosition " << textPosition.x << " " << textPosition.y << "\n";
-	weightText.SetPosition( endPosition + (sf::Vector2i)textPosition);
 	
-	//weightText.SetRotation(rotationDegrees);
+	weightText.SetPosition( endPosition + (sf::Vector2i)textPosition);
+	weightText.SetRotation(textRotation);
 }
 
 void EdgeShape::Draw(sf::RenderTarget& window) const
