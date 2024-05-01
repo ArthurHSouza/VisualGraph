@@ -44,6 +44,11 @@ void NodeCircle::FillWithDefinedColor(DefinedColor color)
 	}
 }
 
+void NodeCircle::FillWithColor(sf::Color c)
+{
+	circle.setOutlineColor(c);
+}
+
 void NodeCircle::FillOutlineWithDefinedColor(DefinedColor color)
 {
 	switch (color)

@@ -247,21 +247,37 @@ void InputManager::KeyboardInput()
 			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
 		}
 		auto result = g.TopologicalSort();
-
+		if (result.empty())
+			std::cout << "NO TOPOLOGICAL SORT FOUND\n";
+		int order = 0;
 		for (std::size_t i = result.size(); i > 0; i--)
 		{
-		/*	for (const auto& e : edges)
-			{
-				if (e->GetBeginingIndex() == result.top().origin && e->GetEndIndex() == result.top().destiny)
-				{
-					std::cout << result.top().destiny << " -> ";
-					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-				}
-			}*/
-			std::cout << result.top() << "->";
+			nodes.at(result.top()).AddText(std::to_string(order++));
 			result.pop();
 		}
-		std::cout << "\n";
+
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
+	{
+		Graph g = Graph(nodes.size());
+		for (const auto& e : edges)
+		{
+			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
+		}
+		auto result = g.KosarujoSSC();
+		if (result.empty())
+			std::cout << "NO SCC FOUND\n";
+		auto colors = { ColorPallet::darkBlue, ColorPallet::celestBlue, ColorPallet::carminRed, ColorPallet::wineRed };
+		int idGroup = 0;
+		for (const auto& r : result)
+		{
+			for (const auto& n : r)
+			{
+				nodes.at(n).FillWithColor(*(colors.begin() + idGroup));
+				nodes.at(n).AddText(std::to_string(idGroup));
+			}
+			idGroup++;
+		}
 	}
 }
 

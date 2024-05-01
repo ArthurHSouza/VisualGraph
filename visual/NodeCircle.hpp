@@ -35,6 +35,7 @@ public:
 
 	void Draw(sf::RenderTarget& window) const override;
 	void FillWithDefinedColor(DefinedColor color) override;
+	void FillWithColor(sf::Color c);
 	void FillOutlineWithDefinedColor(DefinedColor color);
 	bool Intersects(sf::FloatRect rect);
 	bool Select(sf::Vector2i& mousePos) override;

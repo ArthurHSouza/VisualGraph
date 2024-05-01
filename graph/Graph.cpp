@@ -85,6 +85,7 @@ std::stack<std::size_t> Graph::TopologicalSort()
 
 	if (HaveCycle()) 
 		return ret;
+	visted.clear();
 	for (std::size_t i{}; i < adjList.size(); i++)
 	{
 		visted.push_back(Color::WHITE);
@@ -99,6 +100,55 @@ std::stack<std::size_t> Graph::TopologicalSort()
 	return ret;
 }
 
+std::vector<std::vector<std::size_t>> Graph::KosarujoSSC()
+{
+	std::vector<std::vector<std::size_t>> ret;
+	auto j = 0;
+	auto topSort = TopologicalSort();
+	if (topSort.size() == 0)
+		return ret;
+	visted.clear();
+	for (std::size_t i{}; i < adjList.size(); i++)
+	{
+		visted.push_back(Color::WHITE);
+	}
+	
+	TransposeGraph();
+	for (std::size_t i = topSort.size(); i > 0; i--)
+	{
+		if (visted[topSort.top()] == Color::WHITE)
+		{
+			std::vector<std::size_t> temp;
+			DFSRecursive(topSort.top(), temp);
+			ret.push_back(temp);
+			j++;
+		}
+		topSort.pop();
+	}
+	std::cout << j << " SCC\n";
+	return ret;
+}
+
+
+void Graph::TransposeGraph()
+{
+	std::vector<std::vector<std::size_t>> newAdjList;
+	newAdjList.reserve(adjList.size());
+
+	for (std::size_t i{}; i < adjList.size(); i++)
+	{
+		newAdjList.emplace_back(std::vector<std::size_t>());
+	}
+
+	for (std::size_t i = 0; i < adjList.size(); i++)
+	{
+		for (const auto& j : adjList[i])
+		{
+			newAdjList[j].push_back(i);
+		}
+	}
+	adjList = newAdjList;
+}
 
 void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret)
 {
@@ -108,6 +158,19 @@ void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret)
 		if (visted[adj] == Color::WHITE)
 		{
 			ret.emplace_back(sourceIndex, adj, 0);
+			DFSRecursive(adj, ret);
+		}
+	}
+}
+
+void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<std::size_t>& ret)
+{
+	visted[sourceIndex] = Color::BLACK;
+	ret.emplace_back(sourceIndex);
+	for (const auto& adj : adjList[sourceIndex])
+	{
+		if (visted[adj] == Color::WHITE)
+		{
 			DFSRecursive(adj, ret);
 		}
 	}

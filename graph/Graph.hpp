@@ -20,8 +20,11 @@ private:
 	};
 	std::vector<Color> visted;
 	std::vector<std::size_t> dist;
-
+	void TransposeGraph();
+	//This one is to know what edges the DFS travel
 	void DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret);
+	//This one is to know what nodes the DFS travel
+	void DFSRecursive(std::size_t sourceIndex, std::vector<std::size_t>& ret);
 	bool DFSRecursiveVerifyCicle(std::size_t sourceIndex);
 	void DFSTopologicalSort(std::size_t sourceIndex, std::stack<std::size_t>& ret);
 public:
@@ -36,4 +39,5 @@ public:
 	//If the stack returned is empty that mean that the graph have a cycle
 	//so in that way is impossible to apply the Topological Sort algorithm
 	[[nodiscard]] std::stack<std::size_t> TopologicalSort();
+	std::vector<std::vector<std::size_t>> KosarujoSSC();
 };
