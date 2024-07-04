@@ -1,5 +1,5 @@
-set(LIBRARY_SOURCES "Graph.cpp")
-set(LIBRARY_HEADERS "Graph.hpp")
+set(LIBRARY_SOURCES "Graph.cpp" "Heap.cpp")
+set(LIBRARY_HEADERS "Graph.hpp" "Heap.hpp")
 
 add_library(
 	${LIBRARY_GRAPH} STATIC

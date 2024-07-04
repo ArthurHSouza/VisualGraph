@@ -1,25 +1,28 @@
 #pragma once
 #include <vector>
 #include <stack>
+#include <utility>
 #include <iostream>
+//TODO: Remove all 'iostram'
 
 struct GraphEdge
 {
 	std::size_t origin;
 	std::size_t destiny;
-	std::size_t weight;
+	float weight;
 };
 
 class Graph
 {
 private:
 	std::vector<std::vector<std::size_t>> adjList;
+	std::vector<std::vector<GraphEdge>> edgeList;
 	enum class Color
 	{
 		WHITE, GRAY, BLACK
 	};
 	std::vector<Color> visted;
-	std::vector<std::size_t> dist;
+
 	void TransposeGraph();
 	//This one is to know what edges the DFS travel
 	void DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret);
@@ -32,6 +35,7 @@ public:
 	Graph(std::size_t ammoutVertex);
 	~Graph() = default;
 	void AddEdges(std::size_t source, std::size_t destination);
+	void AddEdges(std::size_t source, std::size_t destination, std::size_t weight);
 
 	[[nodiscard]] std::vector<GraphEdge> BFS(std::size_t sourceIndex);
 	[[nodiscard]] std::vector<GraphEdge> DFS(std::size_t sourceIndex);
@@ -40,4 +44,6 @@ public:
 	//so in that way is impossible to apply the Topological Sort algorithm
 	[[nodiscard]] std::stack<std::size_t> TopologicalSort();
 	std::vector<std::vector<std::size_t>> KosarujoSSC();
+	//Returns the vertex index and the minimum distance to it
+	[[nodiscard]] std::vector<std::pair<std::size_t, std::size_t>> Dijkstra(std::size_t sourceIndes);
 };

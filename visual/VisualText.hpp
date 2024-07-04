@@ -8,6 +8,11 @@ class VisualText : public VisualObject
 private:
 	sf::Text text;
 public:
+	//TODO: Delete this later
+	VisualText() : VisualObject(sf::Vector2i(), 1, sf::Color::Black)
+	{
+
+	}
 	VisualText(std::string textStr, sf::Vector2f position = sf::Vector2f(), unsigned int charSize = 30, sf::Color color = sf::Color::Black);
 	~VisualText() = default;
 

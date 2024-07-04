@@ -7,7 +7,7 @@ class EdgeShape : public SelectableVisualObject
 private:
 	const std::size_t begningIndex;
 	const std::size_t endIndex;
-	const float weight = 4.25f;
+	float weight = 4.25f;
 	VisualText weightText;
 	sf::RectangleShape arrowRect;
 	sf::ConvexShape arrowHead;

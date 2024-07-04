@@ -2,24 +2,29 @@
 #include <queue>
 #include <stack>
 #include <limits>
+#include <map>
+#include "Heap.hpp"
 #include <iostream>
 
 Graph::Graph(std::size_t ammoutVertex)
 {
 	adjList.reserve(ammoutVertex);
+	edgeList.reserve(ammoutVertex);
 	for (std::size_t i{}; i < ammoutVertex; i++)
 	{
 		adjList.emplace_back(std::vector<std::size_t>());
+		edgeList.emplace_back(std::vector<GraphEdge>());
 	}
 }
 
 [[nodiscard]] std::vector<GraphEdge> Graph::BFS(std::size_t sourceIndex)
 {
 	std::vector<GraphEdge> ret;
+	std::vector<float> dist;
 	for (std::size_t i{}; i < adjList.size(); i++)
 	{
 		visted.push_back(Color::WHITE);
-		dist.push_back(std::numeric_limits<std::size_t>::infinity());
+		dist.push_back(std::numeric_limits<float>::infinity());
 	}
 
 	dist[sourceIndex] = 0;
@@ -52,6 +57,7 @@ Graph::Graph(std::size_t ammoutVertex)
 std::vector<GraphEdge> Graph::DFS(std::size_t sourceIndex)
 {
 	std::vector<GraphEdge> ret;
+	std::vector<float> dist;
 
 	for (std::size_t i{}; i < adjList.size(); i++)
 	{
@@ -129,6 +135,41 @@ std::vector<std::vector<std::size_t>> Graph::KosarujoSSC()
 	return ret;
 }
 
+std::vector<std::pair<std::size_t, std::size_t>> Graph::Dijkstra(std::size_t sourceIndex)
+{
+	std::vector<std::pair<std::size_t, std::size_t>> ret;
+
+	std::vector<float> distance;
+	std::vector < std::pair<float, std::size_t>> distance_index;
+	for (std::size_t i{}; i < adjList.size(); i++)
+	{
+		distance.push_back(std::numeric_limits<float>::infinity());
+	}
+	distance[sourceIndex] = 0;
+	
+	distance_index.push_back({ 0,sourceIndex });
+	Heap weightQueue(distance_index,true);
+
+	while (!weightQueue.Empty())
+	{
+		ret.push_back({ weightQueue.Top().second , weightQueue.Top().first });
+		
+		auto top = edgeList[weightQueue.Top().second];
+		weightQueue.Pop();
+		for (const auto& i : top)
+		{
+			//Relaxing
+			if (distance[i.destiny] > distance[i.origin]+ i.weight)
+			{
+				distance[i.destiny] = distance[i.origin] + i.weight;
+				distance_index.push_back({ distance[i.destiny], i.destiny });
+			}
+		}
+		weightQueue.Update();
+	}
+
+	return ret;
+}
 
 void Graph::TransposeGraph()
 {
@@ -209,4 +250,9 @@ void Graph::DFSTopologicalSort(std::size_t sourceIndex, std::stack<std::size_t>&
 void Graph::AddEdges(std::size_t source, std::size_t destination)
 {
 	adjList[source].push_back(destination);
+}
+
+void Graph::AddEdges(std::size_t source, std::size_t destination, std::size_t weight)
+{
+	edgeList[source].emplace_back(source, destination, weight);
 }

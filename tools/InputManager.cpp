@@ -279,6 +279,24 @@ void InputManager::KeyboardInput()
 			idGroup++;
 		}
 	}
+	//Dijkstra
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
+	{
+		Graph g = Graph(nodes.size());
+		for (const auto& e : edges)
+		{
+			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex(), e->GetWeight());
+		}
+		auto result = g.Dijkstra(0);
+
+		for (const auto& r : result)
+		{
+			nodes.at(r.first).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+			nodes.at(r.first).AddText(std::to_string(r.second));
+			
+		}
+		nodes.at(0).AddText("Source");
+	}
 }
 
 void InputManager::Update()
