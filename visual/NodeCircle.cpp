@@ -124,7 +124,8 @@ void NodeCircle::InsertEdge(std::weak_ptr<EdgeShape> edge)
 
 void NodeCircle::AddText(std::string text)
 {
-	extraText.emplace(text, (sf::Vector2f)position + sf::Vector2f(0.f, (-circle.getRadius() - circle.getOutlineThickness()) * 1.4f),
+	extraText.emplace(text, (sf::Vector2f)position + sf::Vector2f(0.f, 
+		(-circle.getRadius() - circle.getOutlineThickness()) * 1.4f),
 		30, ColorPallet::ceruleanBlue);
 }
 

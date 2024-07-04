@@ -135,9 +135,9 @@ std::vector<std::vector<std::size_t>> Graph::KosarujoSSC()
 	return ret;
 }
 
-std::vector<std::pair<std::size_t, std::size_t>> Graph::Dijkstra(std::size_t sourceIndex)
+std::vector<GraphEdge> Graph::Dijkstra(std::size_t sourceIndex)
 {
-	std::vector<std::pair<std::size_t, std::size_t>> ret;
+	std::vector<GraphEdge> ret(adjList.size());
 
 	std::vector<float> distance;
 	std::vector < std::pair<float, std::size_t>> distance_index;
@@ -152,22 +152,22 @@ std::vector<std::pair<std::size_t, std::size_t>> Graph::Dijkstra(std::size_t sou
 
 	while (!weightQueue.Empty())
 	{
-		ret.push_back({ weightQueue.Top().second , weightQueue.Top().first });
-		
-		auto top = edgeList[weightQueue.Top().second];
+		auto topEdges = edgeList[weightQueue.Top().second];
+
 		weightQueue.Pop();
-		for (const auto& i : top)
+		for (const auto& i : topEdges)
 		{
 			//Relaxing
 			if (distance[i.destiny] > distance[i.origin]+ i.weight)
 			{
+				ret.at(i.destiny) = {i.origin, i.destiny, distance[i.origin] + i.weight };
 				distance[i.destiny] = distance[i.origin] + i.weight;
 				distance_index.push_back({ distance[i.destiny], i.destiny });
 			}
 		}
+
 		weightQueue.Update();
 	}
-
 	return ret;
 }
 
@@ -252,7 +252,7 @@ void Graph::AddEdges(std::size_t source, std::size_t destination)
 	adjList[source].push_back(destination);
 }
 
-void Graph::AddEdges(std::size_t source, std::size_t destination, std::size_t weight)
+void Graph::AddEdges(std::size_t source, std::size_t destination, float weight)
 {
 	edgeList[source].emplace_back(source, destination, weight);
 }

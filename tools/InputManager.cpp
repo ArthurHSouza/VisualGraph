@@ -309,11 +309,23 @@ void InputManager::KeyboardInput()
 		}
 		auto result = g.Dijkstra(0);
 
-		for (const auto& r : result)
+		/*for (const auto& r : result)
 		{
 			nodes.at(r.first).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
 			nodes.at(r.first).AddText(std::to_string(r.second));
 			
+		}*/
+		for (const auto& r : result)
+		{
+			for (const auto& e : edges)
+			{
+				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny)
+				{
+					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+				}
+			}
+			nodes.at(r.destiny).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+			nodes.at(r.destiny).AddText(std::to_string(r.weight).substr(0, 5));
 		}
 		nodes.at(0).AddText("Source");
 	}

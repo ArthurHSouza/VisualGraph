@@ -7,9 +7,9 @@
 
 struct GraphEdge
 {
-	std::size_t origin;
-	std::size_t destiny;
-	float weight;
+	std::size_t origin = 0;
+	std::size_t destiny = 0;
+	float weight = 0;
 };
 
 class Graph
@@ -35,7 +35,7 @@ public:
 	Graph(std::size_t ammoutVertex);
 	~Graph() = default;
 	void AddEdges(std::size_t source, std::size_t destination);
-	void AddEdges(std::size_t source, std::size_t destination, std::size_t weight);
+	void AddEdges(std::size_t source, std::size_t destination, float weight);
 
 	[[nodiscard]] std::vector<GraphEdge> BFS(std::size_t sourceIndex);
 	[[nodiscard]] std::vector<GraphEdge> DFS(std::size_t sourceIndex);
@@ -45,5 +45,5 @@ public:
 	[[nodiscard]] std::stack<std::size_t> TopologicalSort();
 	std::vector<std::vector<std::size_t>> KosarujoSSC();
 	//Returns the vertex index and the minimum distance to it
-	[[nodiscard]] std::vector<std::pair<std::size_t, std::size_t>> Dijkstra(std::size_t sourceIndes);
+	[[nodiscard]] std::vector<GraphEdge> Dijkstra(std::size_t sourceIndes);
 };
