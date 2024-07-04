@@ -9,6 +9,7 @@
 #include "EdgeShape.hpp"
 #include "Camera.hpp"
 
+//Class responsible to deal with all user`s input
 class InputManager
 {
 private:

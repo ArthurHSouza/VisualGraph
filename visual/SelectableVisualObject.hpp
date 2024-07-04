@@ -1,6 +1,7 @@
 #pragma once 
 #include "VisualObject.hpp"
 
+//A Visual Obect that can be selected by the mouse
 class SelectableVisualObject : public VisualObject
 {
 protected:

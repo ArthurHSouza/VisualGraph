@@ -66,6 +66,7 @@ void NodeCircle::FillOutlineWithDefinedColor(DefinedColor color)
 		break;
 	}
 }
+
 bool NodeCircle::Select(sf::Vector2i& mousePos)
 {
 	sf::Rect<float> mouseRec(sf::Vector2f(mousePos), sf::Vector2f(1, 1));
@@ -73,14 +74,7 @@ bool NodeCircle::Select(sf::Vector2i& mousePos)
 	if (circle.getGlobalBounds().intersects(mouseRec))
 	{
 		isSelected = !isSelected;
-		if (isSelected)
-		{
-			circle.setFillColor(selectedColor);
-		}
-		else
-		{
-			circle.setFillColor(defaultColor);
-		}
+		(isSelected) ? circle.setFillColor(selectedColor) : circle.setFillColor(defaultColor);
 	}
 	return isSelected;
 }
@@ -93,7 +87,7 @@ bool NodeCircle::Intersects(sf::FloatRect rect)
 void NodeCircle::SetAsNotSelected()
 {
 	isSelected = false;
-	circle.setFillColor(sf::Color::White);
+	circle.setFillColor(defaultColor);
 }
 
 void NodeCircle::SetPosition(sf::Vector2i mousePosition)
@@ -108,6 +102,7 @@ void NodeCircle::SetPosition(sf::Vector2i mousePosition)
 
 	std::erase_if(edges, [](auto& e) {return e.expired(); });
 
+	//Updating the edges that are linked to this node
 	for (auto& e : edges)
 	{
 		auto temp = e.lock();
@@ -161,3 +156,24 @@ const bool NodeCircle::GetIsSelected() const
 	return isSelected;
 }
 
+NodeCircle& NodeCircle::operator=(const NodeCircle& other)
+{
+	this->position = other.position;
+	this->circle = other.circle;
+	this->indexText = other.indexText;
+	this->index = other.index;
+	this->isSelected = other.isSelected;
+	this->edges = other.edges;
+	return *this;
+}
+
+void NodeCircle::ClearIndexCounter()
+{
+	count = 0;
+}
+
+void NodeCircle::UpdateIndex()
+{
+	indexText = std::to_string(count);
+	index = count++;
+}

@@ -10,6 +10,7 @@ InputManager::InputManager(sf::RenderWindow& window, Camera& cam, std::vector<No
 void InputManager::AddNodeOnPosition(sf::Vector2i& position)
 {
 	sf::Rect<float> tempRect(sf::Vector2f(position), sf::Vector2f(2, 2));
+	//Cannot have to nodes on the same position
 	for (auto& i : nodes)
 	{
 		if (i.Intersects(tempRect))
@@ -22,17 +23,28 @@ void InputManager::DeleteNode(size_t index)
 {
 	auto edegesAdress = nodes.at(index).GetLinkedEdges();
 
+	//Deleting all the linked edges
 	for (auto& e : edegesAdress)
 	{
 		std::erase_if(edges,
 			[&e](auto element) {return &*element == &*e; });
 	}
 
+	//Deleting the node itself
 	nodes.erase(nodes.begin() + index);
 
 	if (nodes.empty())
 	{
 		deleteMode = false;
+	}
+	//Updating the indexes
+	else
+	{
+		NodeCircle::ClearIndexCounter();
+		for (auto& n : nodes)
+		{
+			n.UpdateIndex();
+		}
 	}
 
 	return;
@@ -40,6 +52,7 @@ void InputManager::DeleteNode(size_t index)
 
 void InputManager::AddEdge(NodeCircle& begining, NodeCircle end)
 {
+	//Cannot have an edge that starts and ends at the same position
 	for (auto& e : edges)
 	{
 		if (e->GetPosition() == begining.GetPosition() && e->GetEndPosition() == end.GetPosition())
@@ -50,7 +63,7 @@ void InputManager::AddEdge(NodeCircle& begining, NodeCircle end)
 	
 	edges.emplace_front(std::make_shared<EdgeShape>(begining.GetIndex(), end.GetIndex(),
 		begining.GetPosition(), end.GetPosition()));
-
+	//Updating the linked nodes to have ref of this new edge
 	nodes.at(selectedNodeIndex.front()).InsertEdge(edges.front());
 	nodes.at(selectedNodeIndex.back()).InsertEdge(edges.front());
 }
@@ -82,15 +95,18 @@ void InputManager::MouseButtonRelease()
 
 void InputManager::MouseButtonInput()
 {
+	//Drag the camera
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
 	{
 		isDragging = true;
 	}
+	//Add nodes
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 	{
 		if (deleteMode) return;
 		AddNodeOnPosition(mousePosition);
 	}
+	//Make a node/edge selection
 	else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		if (deleteMode)
@@ -109,12 +125,13 @@ void InputManager::MouseButtonInput()
 				if (deleteMode)
 				{
 					DeleteNode(i);
+					return;
 				}
 				
 				selectedNodeIndex.push_back(i);
 			}
 		}
-
+		//Move the node
 		if (selectedNodeIndex.size() == 1)
 		{
 			if (!nodes.at(selectedNodeIndex.at(0)).GetIsSelected())
@@ -127,7 +144,7 @@ void InputManager::MouseButtonInput()
 			holding = true;
 			return;
 		}
-
+		//Adding edge
 		if (selectedNodeIndex.size() == 2)
 		{
 			AddEdge(
@@ -146,12 +163,14 @@ void InputManager::KeyboardInput()
 	{
 		window.close();
 	}
+	//Delete all the nodes and edges
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
 	{
-		NodeCircle::count = 0;
+		NodeCircle::ClearIndexCounter();
 		nodes.clear();
 		edges.clear();
 	}
+	//Toogle the delete mode
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		deleteMode = !deleteMode;
@@ -170,6 +189,7 @@ void InputManager::KeyboardInput()
 			for (auto& e : edges) e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::DefaultColor);
 		}
 	}
+	//Take a screenshot
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 	{
 		sf::Texture texture;

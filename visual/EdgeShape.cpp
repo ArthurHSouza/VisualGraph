@@ -13,9 +13,9 @@ EdgeShape::EdgeShape(std::size_t begningIndex, std::size_t endIndex, sf::Vector2
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> distrib(1, 100);
 	weight = (float)distrib(gen);
-	weightText = (std::to_string(weight).substr(0, 5));
+	weightText.emplace(std::to_string(weight).substr(0, 5));
 
-	weightText.SetColor(ColorPallet::petrolBlue);
+	weightText->SetColor(ColorPallet::petrolBlue);
 
 	collisionPoint.setSize(sf::Vector2f(20.f,20.f));
 	collisionPoint.setOrigin(collisionPoint.getGlobalBounds().getSize() / 2.f);
@@ -209,9 +209,11 @@ void EdgeShape::UpdateWeightText()
 		);
 		textRotation = 360 - textRotation;
 	}
-	
-	weightText.SetPosition( endPosition + (sf::Vector2i)textPosition);
-	weightText.SetRotation(textRotation);
+	if (weightText.has_value())
+	{
+		weightText->SetPosition( endPosition + (sf::Vector2i)textPosition);
+		weightText->SetRotation(textRotation);
+	}
 }
 
 void EdgeShape::Draw(sf::RenderTarget& window) const
@@ -220,7 +222,8 @@ void EdgeShape::Draw(sf::RenderTarget& window) const
 	if(drawCollisionPoint)
 		window.draw(collisionPoint);
 	window.draw(arrowHead);
-	weightText.Draw(window);
+	if(weightText.has_value())
+		weightText->Draw(window);
 }
 
 void EdgeShape::Update(sf::Vector2i begining, sf::Vector2i end, bool shallChangePosition)

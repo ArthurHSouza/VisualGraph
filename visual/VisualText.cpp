@@ -1,6 +1,6 @@
 #include "AssetManager.hpp"
 #include "VisualText.hpp"
-
+#include <iostream>
 VisualText::VisualText(std::string textStr, sf::Vector2f position, unsigned int charSize, sf::Color color) :
 	VisualObject((sf::Vector2i)position, charSize, color)
 {
@@ -22,6 +22,7 @@ void VisualText::Draw(sf::RenderTarget& window) const
 
 void VisualText::SetPosition(sf::Vector2i position)
 {
+	position = position;
 	text.setPosition((sf::Vector2f)position);
 }
 
@@ -38,4 +39,28 @@ void VisualText::SetColor(sf::Color color)
 const sf::Vector2i VisualText::GetPosition() const
 {
 	return (sf::Vector2i)text.getPosition();
+}
+
+VisualText& VisualText::operator=(const VisualText& other)
+{
+	this->text = other.text;
+	this->position = other.position;
+	this->size = other.size;
+
+	return *this;
+}
+
+VisualText& VisualText::operator=(const std::string& str)
+{
+	text = sf::Text(
+		str,
+		AssetManager<sf::Font>::Get("assets/Square.ttf"),
+		size
+	);
+
+	text.setOrigin(text.getGlobalBounds().getSize() / 2.f + text.getGlobalBounds().getPosition());
+	text.setFillColor(defaultColor);
+	text.setPosition((sf::Vector2f)position);
+
+	return *this;
 }

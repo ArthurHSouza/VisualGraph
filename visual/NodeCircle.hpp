@@ -7,6 +7,7 @@
 #include "SelectableVisualObject.hpp"
 #include "VisualText.hpp"
 
+//The Node visual representation 
 class NodeCircle : public SelectableVisualObject
 {
 private:
@@ -14,24 +15,14 @@ private:
 	sf::Color outlineColor;
 	VisualText indexText;
 	std::optional<VisualText> extraText;
-	const size_t index;
+	size_t index;
 	bool isSelected{ false };
 	std::vector<std::weak_ptr<EdgeShape>> edges;
 
-public:
 	static size_t count;
+public:
 	NodeCircle(sf::Vector2i position);
 	~NodeCircle() = default;
-
-	NodeCircle& operator=(const NodeCircle& other)
-	{
-		this->position = other.position;
-		this->circle = other.circle;
-		this->indexText = other.indexText;
-		this->isSelected = other.isSelected;
-		this->edges = other.edges;
-		return *this;
-	}
 
 	void Draw(sf::RenderTarget& window) const override;
 	void FillWithDefinedColor(DefinedColor color) override;
@@ -47,4 +38,7 @@ public:
 	const size_t GetIndex() const;
 	const sf::Vector2i GetPosition() const override;
 	const bool GetIsSelected() const;
+	NodeCircle& operator=(const NodeCircle& other);
+	static void ClearIndexCounter();
+	void UpdateIndex();
 };

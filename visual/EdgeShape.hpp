@@ -2,13 +2,16 @@
 #include "SelectableVisualObject.hpp"
 #include "VisualText.hpp"
 #include <iostream>
+#include <optional>
+
+//A Edge visual representation
 class EdgeShape : public SelectableVisualObject
 {
 private:
 	const std::size_t begningIndex;
 	const std::size_t endIndex;
-	float weight = 4.25f;
-	VisualText weightText;
+	float weight;
+	std::optional<VisualText> weightText;
 	sf::RectangleShape arrowRect;
 	sf::ConvexShape arrowHead;
 	sf::Vector2i endPosition;

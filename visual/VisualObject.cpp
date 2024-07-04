@@ -1,5 +1,6 @@
 #include "VisualObject.hpp"
 
+//Only Colors initializations 
 sf::Color ColorPallet::darkBlue = sf::Color(0, 0, 128);
 sf::Color ColorPallet::petrolBlue = sf::Color(0, 47, 168);
 sf::Color ColorPallet::turquoiseBlue = sf::Color(0, 255, 255);

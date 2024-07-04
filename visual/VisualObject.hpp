@@ -16,11 +16,12 @@ struct ColorPallet
 	static sf::Color wineRed;
 };
 
+//An abstract object that will be drawn on the screen
 class VisualObject
 {
 protected:
 	sf::Vector2i position;
-	const float size;
+	float size;
 	const sf::Color defaultColor;
 public:
 	VisualObject(sf::Vector2i position, const float size, sf::Color defaultColor);
