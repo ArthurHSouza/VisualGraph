@@ -22,12 +22,16 @@ private:
 		WHITE, GRAY, BLACK
 	};
 	std::vector<Color> visted;
+	size_t timeCounter{}; //DFS only
+	std::vector<std::pair<size_t, size_t>> timeFinishedIndex;
 
 	void TransposeGraph();
 	//This one is to know what edges the DFS travel
 	void DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret);
 	//This one is to know what nodes the DFS travel
 	void DFSRecursive(std::size_t sourceIndex, std::vector<std::size_t>& ret);
+	//This one does not store any edge or node traveled
+	void DFSRecursive(size_t sourceIndex);
 	bool DFSRecursiveVerifyCicle(std::size_t sourceIndex);
 	void DFSTopologicalSort(std::size_t sourceIndex, std::stack<std::size_t>& ret);
 public:
@@ -45,5 +49,6 @@ public:
 	[[nodiscard]] std::stack<std::size_t> TopologicalSort();
 	std::vector<std::vector<std::size_t>> KosarujoSSC();
 	//Returns the vertex index and the minimum distance to it
-	[[nodiscard]] std::vector<GraphEdge> Dijkstra(std::size_t sourceIndes);
+	[[nodiscard]] std::vector<GraphEdge> Dijkstra(std::size_t sourceIndex);
+	[[nodiscard]] std::vector<GraphEdge> BellmanFord(std::size_t sourceIndex);
 };

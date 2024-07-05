@@ -176,5 +176,6 @@ void NodeCircle::ClearIndexCounter()
 void NodeCircle::UpdateIndex()
 {
 	indexText = std::to_string(count);
+	indexText.SetPosition(position);
 	index = count++;
 }

@@ -201,6 +201,7 @@ void InputManager::KeyboardInput()
 			std::cout << "screenshot saved to " << fileName << std::endl;
 		}
 	}
+	//BFS
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) || sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad1))
 	{
 		Graph g = Graph(nodes.size());
@@ -223,10 +224,11 @@ void InputManager::KeyboardInput()
 				}
 			}
 			
-			nodes.at(r.destiny).AddText(std::to_string(r.weight));
+			nodes.at(r.destiny).AddText(std::to_string((int)r.weight));
 			
 		}
 	}
+	//DFS
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
 	{
 		Graph g = Graph(nodes.size());
@@ -309,12 +311,6 @@ void InputManager::KeyboardInput()
 		}
 		auto result = g.Dijkstra(0);
 
-		/*for (const auto& r : result)
-		{
-			nodes.at(r.first).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-			nodes.at(r.first).AddText(std::to_string(r.second));
-			
-		}*/
 		for (const auto& r : result)
 		{
 			for (const auto& e : edges)
@@ -329,6 +325,30 @@ void InputManager::KeyboardInput()
 		}
 		nodes.at(0).AddText("Source");
 	}
+	//Bellman-Ford
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num7))
+	{
+		Graph g = Graph(nodes.size());
+		for (const auto& e : edges)
+		{
+			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex(), e->GetWeight());
+		}
+		auto result = g.BellmanFord(0);
+
+		for (const auto& r : result)
+		{
+			for (const auto& e : edges)
+			{
+				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny)
+				{
+					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+				}
+			}
+			nodes.at(r.destiny).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+			nodes.at(r.destiny).AddText(std::to_string(r.weight).substr(0, 5));
+		}
+		nodes.at(0).AddText("Source");
+		}
 }
 
 void InputManager::Update()

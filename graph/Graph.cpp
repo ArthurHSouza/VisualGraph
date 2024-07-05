@@ -57,15 +57,21 @@ Graph::Graph(std::size_t ammoutVertex)
 std::vector<GraphEdge> Graph::DFS(std::size_t sourceIndex)
 {
 	std::vector<GraphEdge> ret;
-	std::vector<float> dist;
+	timeFinishedIndex = std::vector<std::pair<size_t,size_t>> (adjList.size(), { 0,0 });
 
 	for (std::size_t i{}; i < adjList.size(); i++)
 	{
 		visted.push_back(Color::WHITE);
-		dist.push_back(std::numeric_limits<std::size_t>::infinity());
 	}
-	
+
 	DFSRecursive(sourceIndex, ret);
+
+	//This is done only to travel all the nodes
+	for (size_t i{}; i < adjList.size(); i++)
+	{
+		if(visted[i] == Color::WHITE)
+			DFSRecursive(i);
+	}
 
 	return ret;
 }
@@ -110,26 +116,30 @@ std::vector<std::vector<std::size_t>> Graph::KosarujoSSC()
 {
 	std::vector<std::vector<std::size_t>> ret;
 	auto j = 0;
-	auto topSort = TopologicalSort();
-	if (topSort.size() == 0)
+	//auto topSort = TopologicalSort();
+	DFS(0);
+	auto timeFinishedCpy = timeFinishedIndex;
+	timeFinishedIndex.clear();
+
+	if (timeFinishedCpy.size() == 0)
 		return ret;
+
 	visted.clear();
 	for (std::size_t i{}; i < adjList.size(); i++)
 	{
 		visted.push_back(Color::WHITE);
 	}
-	
+	std::ranges::sort(timeFinishedCpy, std::greater<std::pair<size_t, size_t>>());
 	TransposeGraph();
-	for (std::size_t i = topSort.size(); i > 0; i--)
+	for (const auto& i : timeFinishedCpy)
 	{
-		if (visted[topSort.top()] == Color::WHITE)
+		if (visted[i.second] == Color::WHITE)
 		{
 			std::vector<std::size_t> temp;
-			DFSRecursive(topSort.top(), temp);
+			DFSRecursive(i.second, temp);
 			ret.push_back(temp);
 			j++;
 		}
-		topSort.pop();
 	}
 	std::cout << j << " SCC\n";
 	return ret;
@@ -171,6 +181,39 @@ std::vector<GraphEdge> Graph::Dijkstra(std::size_t sourceIndex)
 	return ret;
 }
 
+std::vector<GraphEdge> Graph::BellmanFord(std::size_t sourceIndex)
+{
+	std::vector<GraphEdge> ret(adjList.size());
+
+	std::vector<float> distance;
+
+	for (std::size_t i{}; i < adjList.size(); i++)
+	{
+		distance.push_back(std::numeric_limits<float>::infinity());
+	}
+	distance[sourceIndex] = 0;
+
+	size_t iOut{};
+	for (; iOut < adjList.size(); iOut++)
+	{
+		for (size_t i{}; i < edgeList[iOut].size(); i++)
+		{
+			size_t origin = edgeList[iOut][i].origin;
+			size_t destiny = edgeList[iOut][i].destiny;
+			float weight = edgeList[iOut][i].weight;
+
+			//Relaxing
+			if (distance[destiny] > distance[origin] + weight)
+			{
+				ret.at(destiny) = { origin, destiny, distance[origin] + weight };
+				distance[destiny] = distance[origin] + weight;
+			}
+		}
+	}
+
+	return ret;
+}
+
 void Graph::TransposeGraph()
 {
 	std::vector<std::vector<std::size_t>> newAdjList;
@@ -199,9 +242,12 @@ void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<GraphEdge>& ret)
 		if (visted[adj] == Color::WHITE)
 		{
 			ret.emplace_back(sourceIndex, adj, 0);
+			timeCounter++;
 			DFSRecursive(adj, ret);
 		}
 	}
+	timeCounter++;
+	timeFinishedIndex[sourceIndex] = { timeCounter, sourceIndex};
 }
 
 void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<std::size_t>& ret)
@@ -215,6 +261,21 @@ void Graph::DFSRecursive(std::size_t sourceIndex, std::vector<std::size_t>& ret)
 			DFSRecursive(adj, ret);
 		}
 	}
+}
+
+void Graph::DFSRecursive(size_t sourceIndex)
+{
+	visted[sourceIndex] = Color::BLACK;
+	for (const auto& adj : adjList[sourceIndex])
+	{
+		if (visted[adj] == Color::WHITE)
+		{
+			timeCounter++;
+			DFSRecursive(adj);
+		}
+	}
+	timeCounter++;
+	timeFinishedIndex[sourceIndex] = { timeCounter, sourceIndex };
 }
 
 bool Graph::DFSRecursiveVerifyCicle(std::size_t sourceIndex)
