@@ -207,7 +207,7 @@ void InputManager::KeyboardInput()
 		Graph g = Graph(nodes.size());
 		for (const auto& e : edges)
 		{
-			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
+			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());		
 		}
 		auto result = g.BFS(0);
 		
@@ -331,7 +331,7 @@ void InputManager::KeyboardInput()
 		Graph g = Graph(nodes.size());
 		for (const auto& e : edges)
 		{
-			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex(), e->GetWeight());
+			g.AddEdgesToEdgeList(e->GetBeginingIndex(), e->GetEndIndex(), e->GetWeight());
 		}
 		auto result = g.BellmanFord(0);
 

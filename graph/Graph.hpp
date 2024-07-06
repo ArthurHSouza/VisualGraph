@@ -15,8 +15,14 @@ struct GraphEdge
 class Graph
 {
 private:
-	std::vector<std::vector<std::size_t>> adjList;
-	std::vector<std::vector<GraphEdge>> edgeList;
+	struct AdjListNode
+	{
+		size_t destiny;
+		float weight = 0;
+	};
+
+	std::vector<std::vector<AdjListNode>> adjList;
+	std::vector<GraphEdge> edgeList;
 	enum class Color
 	{
 		WHITE, GRAY, BLACK
@@ -38,8 +44,8 @@ public:
 
 	Graph(std::size_t ammoutVertex);
 	~Graph() = default;
-	void AddEdges(std::size_t source, std::size_t destination);
-	void AddEdges(std::size_t source, std::size_t destination, float weight);
+	void AddEdges(std::size_t source, std::size_t destination, float weight = 0.f);
+	void AddEdgesToEdgeList(std::size_t source, std::size_t destination, float weight);
 
 	[[nodiscard]] std::vector<GraphEdge> BFS(std::size_t sourceIndex);
 	[[nodiscard]] std::vector<GraphEdge> DFS(std::size_t sourceIndex);
