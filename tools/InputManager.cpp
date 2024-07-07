@@ -52,6 +52,7 @@ void InputManager::DeleteNode(size_t index)
 
 void InputManager::AddEdge(NodeCircle& begining, NodeCircle end)
 {
+	float weight = 0.f;
 	//Cannot have an edge that starts and ends at the same position
 	for (auto& e : edges)
 	{
@@ -59,10 +60,14 @@ void InputManager::AddEdge(NodeCircle& begining, NodeCircle end)
 		{
 			return;
 		}
+		else if (e->GetPosition() == end.GetPosition() && e->GetEndPosition() == begining.GetPosition())
+		{
+			weight = e->GetWeight();
+		}
 	}
 	
 	edges.emplace_front(std::make_shared<EdgeShape>(begining.GetIndex(), end.GetIndex(),
-		begining.GetPosition(), end.GetPosition()));
+		begining.GetPosition(), end.GetPosition(), weight));
 	//Updating the linked nodes to have ref of this new edge
 	nodes.at(selectedNodeIndex.front()).InsertEdge(edges.front());
 	nodes.at(selectedNodeIndex.back()).InsertEdge(edges.front());
@@ -348,6 +353,31 @@ void InputManager::KeyboardInput()
 			nodes.at(r.destiny).AddText(std::to_string(r.weight).substr(0, 5));
 		}
 		nodes.at(0).AddText("Source");
+		}
+	//Prim MST
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num8))
+	{
+		Graph g = Graph(nodes.size());
+		for (const auto& e : edges)
+		{
+			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex(), e->GetWeight());
+		}
+		auto result = g.PrimMST();
+
+		for (const auto& r : result)
+		{
+			for (const auto& e : edges)
+			{
+				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny || 
+					e->GetBeginingIndex() == r.destiny && e->GetEndIndex() == r.origin)
+				{
+					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+				}
+			}
+			nodes.at(r.destiny).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+			//nodes.at(r.destiny).AddText(std::to_string(r.weight).substr(0, 5));
+		}
+		//nodes.at(0).AddText("Source");
 		}
 }
 

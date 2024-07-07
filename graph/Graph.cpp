@@ -225,6 +225,41 @@ std::vector<GraphEdge> Graph::BellmanFord(std::size_t sourceIndex)
 	return ret;
 }
 
+std::vector<GraphEdge> Graph::PrimMST()
+{
+	std::vector<GraphEdge> ret(adjList.size(), {0,0,0});
+	std::vector<float> distance;
+	std::vector < std::pair<float, std::size_t>> distance_index;
+	for (std::size_t i{}; i < adjList.size(); i++)
+	{
+		distance.push_back(std::numeric_limits<float>::infinity());
+	}
+	distance.at(0) = 0;
+
+	distance_index.push_back(std::pair<float, std::size_t>{ 0.f, 0 });
+	Heap weightQueue(distance_index, true);
+
+	while (!weightQueue.Empty())
+	{
+		auto top = weightQueue.Top().second;
+
+		weightQueue.Pop();
+		for (const auto& i : adjList.at(top))
+		{
+			//Does not take a node that is already added in the tree
+			if (ret.at(i.destiny).destiny == 0 && distance.at(i.destiny) > i.weight)
+			{
+				ret.at(i.destiny) = { top, i.destiny, distance.at(top) + i.weight };
+				distance.at(i.destiny) = distance.at(top) + i.weight;
+				distance_index.push_back({ distance.at(i.destiny), i.destiny });
+			}
+		}
+
+		weightQueue.Update();
+	}
+	return ret;
+}
+
 void Graph::TransposeGraph()
 {
 	std::vector<std::vector<AdjListNode>> newAdjList;

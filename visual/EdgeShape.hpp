@@ -21,7 +21,7 @@ private:
 	void UpdateWeightText();
 
 public:
-	EdgeShape(std::size_t begningIndex,std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end);
+	EdgeShape(std::size_t begningIndex,std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end, float weight = 0.f);
 	~EdgeShape() = default;
 
 	void Draw(sf::RenderTarget& window) const override;

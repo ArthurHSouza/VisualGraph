@@ -57,4 +57,5 @@ public:
 	//Returns the vertex index and the minimum distance to it
 	[[nodiscard]] std::vector<GraphEdge> Dijkstra(std::size_t sourceIndex);
 	[[nodiscard]] std::vector<GraphEdge> BellmanFord(std::size_t sourceIndex);
+	[[nodiscard]] std::vector<GraphEdge> PrimMST();
 };
