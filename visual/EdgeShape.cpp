@@ -4,22 +4,15 @@
 #include <iostream>
 #include <random>
 
-EdgeShape::EdgeShape(std::size_t begningIndex, std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end, float weight) :
+EdgeShape::EdgeShape(std::size_t begningIndex, std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end, float weight, bool haveText) :
 	SelectableVisualObject(begining, 10.f, sf::Color::Black, ColorPallet::celestBlue, ColorPallet::carminRed),
-	begningIndex{begningIndex}, endIndex{endIndex}, endPosition{end}
+	begningIndex{begningIndex}, endIndex{endIndex}, endPosition{end}, weight{weight}
 {
-	//TODO: DELTE THIS AND CHANGE WEIGHT TO CONST
-	if (weight == 0.f)
+	if (haveText)
 	{
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::uniform_int_distribution<> distrib(1, 100);
-		weight = (float)distrib(gen);
 		weightText.emplace(std::to_string(weight).substr(0, 5));
 		weightText->SetColor(ColorPallet::petrolBlue);
 	}
-	this->weight = weight;
-
 
 	collisionPoint.setSize(sf::Vector2f(20.f,20.f));
 	collisionPoint.setOrigin(collisionPoint.getGlobalBounds().getSize() / 2.f);

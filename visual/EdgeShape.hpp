@@ -10,7 +10,7 @@ class EdgeShape : public SelectableVisualObject
 private:
 	const std::size_t begningIndex;
 	const std::size_t endIndex;
-	float weight;
+	const float weight;
 	std::optional<VisualText> weightText;
 	sf::RectangleShape arrowRect;
 	sf::ConvexShape arrowHead;
@@ -21,7 +21,7 @@ private:
 	void UpdateWeightText();
 
 public:
-	EdgeShape(std::size_t begningIndex,std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end, float weight = 0.f);
+	EdgeShape(std::size_t begningIndex,std::size_t endIndex, sf::Vector2i begining, sf::Vector2i end, float weight, bool haveText = true);
 	~EdgeShape() = default;
 
 	void Draw(sf::RenderTarget& window) const override;

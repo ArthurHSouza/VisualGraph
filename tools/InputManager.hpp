@@ -7,7 +7,9 @@
 #include <algorithm>
 #include "NodeCircle.hpp"
 #include "EdgeShape.hpp"
+#include "VisualText.hpp"
 #include "Camera.hpp"
+#include <atomic>
 
 //Class responsible to deal with all user`s input
 class InputManager
@@ -19,6 +21,10 @@ private:
 	std::forward_list<std::shared_ptr<EdgeShape>>& edges;
 	Camera& cam;
 	std::optional<sf::Clock> timeHolding;
+
+	sf::Event event;
+	std::atomic<bool> isTyping{ false };
+	std::optional<VisualText>& text;
 
 	bool holding{ false };
 	bool editMode{ false };
@@ -37,8 +43,11 @@ private:
 	void MouseButtonInput();
 	void KeyboardInput();
 
+	void TextInput();
+
 public:
-	InputManager(sf::RenderWindow& window, Camera& cam, std::vector<NodeCircle>& nodes, std::forward_list<std::shared_ptr<EdgeShape>>& edges);
+	InputManager(sf::RenderWindow& window, Camera& cam, std::optional<VisualText>& text,
+		std::vector<NodeCircle>& nodes, std::forward_list<std::shared_ptr<EdgeShape>>& edges);
 	~InputManager() = default;
 
 	void Update();
