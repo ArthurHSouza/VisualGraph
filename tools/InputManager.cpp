@@ -1,7 +1,7 @@
 #include "InputManager.hpp"
 #include "Graph.hpp"
 #include <stack>
-
+#include "GraphHandler.hpp"
 #include <cctype>
 #include <thread>
 #include <atomic>
@@ -170,6 +170,7 @@ void InputManager::MouseButtonInput()
 				selectedNodeIndex.push_back(i);
 			}
 		}
+
 		//Move the node
 		if (selectedNodeIndex.size() == 1)
 		{
@@ -239,175 +240,70 @@ void InputManager::KeyboardInput()
 		}
 	}
 	//BFS
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1) || sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad1))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::B) || sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad1))
 	{
-		Graph g = Graph(nodes.size());
-		for (const auto& e : edges)
+		if (!selectedNodeIndex.empty())
 		{
-			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());		
+			gh::BFS(selectedNodeIndex.at(0), nodes, edges);
+			for (auto& v : nodes)
+				v.SetAsNotSelected();
+			selectedNodeIndex.clear();
 		}
-		auto result = g.BFS(0);
-		
-		nodes.at(0).AddText("Source");
-		nodes.at(0).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-
-		for (const auto& r : result)
-		{
-			for (const auto& e : edges)
-			{
-				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny)
-				{
-					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-				}
-			}
-			
-			nodes.at(r.destiny).AddText(std::to_string((int)r.weight));
-			
-		}
+		else
+			text = VisualText("You do not selected a node\n", (sf::Vector2f)(window.getSize()) / 2.f, true, 60,
+				ColorPallet::wineRed, 2, ColorPallet::carminRed);
 	}
 	//DFS
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		Graph g = Graph(nodes.size());
-		for (const auto& e : edges)
+		if (!selectedNodeIndex.empty())
 		{
-			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
+			gh::DFS(selectedNodeIndex.at(0), nodes, edges);
+			for (auto& v : nodes)
+				v.SetAsNotSelected();
+			selectedNodeIndex.clear();
 		}
-		auto result = g.DFS(0);
-
-		for (const auto& r : result)
-		{
-			for (const auto& e : edges)
-			{
-				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny)
-				{
-					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-				}
-			}
-		}
-
-		nodes.at(0).AddText("Source");
-		nodes.at(0).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
+		else
+			text = VisualText("You do not selected a node\n", (sf::Vector2f)(window.getSize()) / 2.f, true, 60,
+				ColorPallet::wineRed, 2, ColorPallet::carminRed);
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+	//TopSort
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
 	{
-		Graph g = Graph(nodes.size());
-		for (const auto& e : edges)
-		{
-			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
-		}
-		std::cout << "Have Cycle? " << g.HaveCycle();
+		gh::TopologicalSort(nodes, edges);
+		for (auto& v : nodes)
+			v.SetAsNotSelected();
+		selectedNodeIndex.clear();
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
-	{
-		Graph g = Graph(nodes.size());
-		for (const auto& e : edges)
-		{
-			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
-		}
-		auto result = g.TopologicalSort();
-		if (result.empty())
-			std::cout << "NO TOPOLOGICAL SORT FOUND\n";
-		int order = 0;
-		for (std::size_t i = result.size(); i > 0; i--)
-		{
-			nodes.at(result.top()).AddText(std::to_string(order++));
-			result.pop();
-		}
-
+	//SCC
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{	
+		gh::SCC(nodes, edges);
+		for (auto& v : nodes)
+			v.SetAsNotSelected();
+		selectedNodeIndex.clear();
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
+	//Dijkstra & BellmanFord
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
 	{
-		Graph g = Graph(nodes.size());
-		for (const auto& e : edges)
+		if (!selectedNodeIndex.empty())
 		{
-			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex());
+			gh::ShortestPath(selectedNodeIndex.at(0), nodes, edges);
+			for (auto& v : nodes)
+				v.SetAsNotSelected();
+			selectedNodeIndex.clear();
 		}
-		auto result = g.KosarujoSSC();
-		if (result.empty())
-			std::cout << "NO SCC FOUND\n";
-		auto colors = { ColorPallet::darkBlue, ColorPallet::celestBlue, ColorPallet::carminRed, ColorPallet::wineRed };
-		int idGroup = 0;
-		for (const auto& r : result)
-		{
-			for (const auto& n : r)
-			{
-				nodes.at(n).FillWithColor(*(colors.begin() + idGroup));
-				nodes.at(n).AddText(std::to_string(idGroup));
-			}
-			idGroup++;
-		}
+		else
+			text = VisualText("You do not selected a node\n", (sf::Vector2f)(window.getSize()) / 2.f, true, 60,
+				ColorPallet::wineRed, 2, ColorPallet::carminRed);
 	}
-	//Dijkstra
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
-	{
-		Graph g = Graph(nodes.size());
-		for (const auto& e : edges)
-		{
-			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex(), e->GetWeight());
-		}
-		auto result = g.Dijkstra(0);
-
-		for (const auto& r : result)
-		{
-			for (const auto& e : edges)
-			{
-				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny)
-				{
-					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-				}
-			}
-			nodes.at(r.destiny).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-			nodes.at(r.destiny).AddText(std::to_string(r.weight).substr(0, 5));
-		}
-		nodes.at(0).AddText("Source");
-	}
-	//Bellman-Ford
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num7))
-	{
-		Graph g = Graph(nodes.size());
-		for (const auto& e : edges)
-		{
-			g.AddEdgesToEdgeList(e->GetBeginingIndex(), e->GetEndIndex(), e->GetWeight());
-		}
-		auto result = g.BellmanFord(0);
-
-		for (const auto& r : result)
-		{
-			for (const auto& e : edges)
-			{
-				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny)
-				{
-					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-				}
-			}
-			nodes.at(r.destiny).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-			nodes.at(r.destiny).AddText(std::to_string(r.weight).substr(0, 5));
-		}
-		nodes.at(0).AddText("Source");
-		}
 	//Prim MST
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num8))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 	{
-		Graph g = Graph(nodes.size());
-		for (const auto& e : edges)
-		{
-			g.AddEdges(e->GetBeginingIndex(), e->GetEndIndex(), e->GetWeight());
-		}
-		auto result = g.PrimMST();
-
-		for (const auto& r : result)
-		{
-			for (const auto& e : edges)
-			{
-				if (e->GetBeginingIndex() == r.origin && e->GetEndIndex() == r.destiny || 
-					e->GetBeginingIndex() == r.destiny && e->GetEndIndex() == r.origin)
-				{
-					e->FillWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-				}
-			}
-			nodes.at(r.destiny).FillOutlineWithDefinedColor(SelectableVisualObject::DefinedColor::SelectedColor);
-		}
+		gh::MinimumST(nodes, edges);
+		for (auto& v : nodes)
+			v.SetAsNotSelected();
+		selectedNodeIndex.clear();
 	}
 }
 
@@ -470,7 +366,7 @@ void InputManager::TextInput()
 
 	if (event.type == sf::Event::TextEntered)
 	{
-		if(std::isdigit(event.text.unicode) || event.text.unicode == '.')
+		if(std::isdigit(event.text.unicode) || event.text.unicode == '.' || event.text.unicode == '-')
 			text->AddChar(event.text.unicode);
 	}
 	else if (event.type == sf::Event::KeyPressed)
